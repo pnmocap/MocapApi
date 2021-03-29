@@ -116,6 +116,7 @@ struct MCPRigidBody_ProcTable {
     EMCPError (MCP_PROC_TABLE_CALLTYPE * GetRigidBodyPosition) ( float * x, float * y, float * z, MCPRigidBodyHandle_t ulRigidBodyHandle);
     EMCPError (MCP_PROC_TABLE_CALLTYPE * GetRigidBodyStatus) ( int * status, MCPRigidBodyHandle_t ulRigidBodyHandle);
     EMCPError (MCP_PROC_TABLE_CALLTYPE * GetRigidBodyId) ( int * id, MCPRigidBodyHandle_t ulRigidBodyHandle);
+    EMCPError (MCP_PROC_TABLE_CALLTYPE * GetRigidBodyJointTag) ( EMCPJointTag * jointTag_, MCPRigidBodyHandle_t ulRigidBodyHandle);
 };
 static const char * IMCPRigidBody_Version = "IMCPRigidBody_001";
 typedef uint64_t MCPSensorModuleHandle_t;

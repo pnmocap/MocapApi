@@ -119,6 +119,10 @@ namespace MocapApi
         {
             return ProcTable.GetRigidBodyId(ref id, ulRigidBodyHandle);
         }
+        public EMCPError GetRigidBodyJointTag(ref EMCPJointTag jointTag_, ulong ulRigidBodyHandle)
+        {
+            return ProcTable.GetRigidBodyJointTag(ref jointTag_, ulRigidBodyHandle);
+        }
         [StructLayout(LayoutKind.Sequential)]
         private struct MCPRigidBody_ProcTable
         {
@@ -141,6 +145,11 @@ namespace MocapApi
             internal delegate EMCPError _GetRigidBodyId(ref int id, ulong ulRigidBodyHandle);
             [MarshalAs(UnmanagedType.FunctionPtr)]
             internal _GetRigidBodyId GetRigidBodyId;
+            
+            [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+            internal delegate EMCPError _GetRigidBodyJointTag(ref EMCPJointTag jointTag_, ulong ulRigidBodyHandle);
+            [MarshalAs(UnmanagedType.FunctionPtr)]
+            internal _GetRigidBodyJointTag GetRigidBodyJointTag;
             
         }
         private MCPRigidBody_ProcTable ProcTable;

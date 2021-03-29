@@ -6,6 +6,8 @@
 
 #ifdef MCP_API_EXPORT
 #define MCP_INTERFACE extern "C" __declspec( dllexport )
+#elif (defined MCP_API_STATIC)
+#define MCP_INTERFACE extern "C"
 #else
 #define MCP_INTERFACE extern "C" __declspec( dllimport )
 #endif
@@ -130,6 +132,9 @@ namespace MocapApi {
             MCPRigidBodyHandle_t ulRigidBodyHandle) = 0;
 
         virtual EMCPError GetRigidBodyId(int * id,
+            MCPRigidBodyHandle_t ulRigidBodyHandle) = 0;
+
+        virtual EMCPError GetRigidBodyJointTag(EMCPJointTag * jointTag_, 
             MCPRigidBodyHandle_t ulRigidBodyHandle) = 0;
     };
     static const char * IMCPRigidBody_Version = "IMCPRigidBody_001";
