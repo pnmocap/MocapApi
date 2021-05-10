@@ -277,14 +277,14 @@ typedef uint64_t MCPRigidBodyHandle_t;
 virtual EMCPError GetRigidBodyRotaion(float * x, float * y, float * z, float * w, 
         MCPRigidBodyHandle_t ulRigidBodyHandle) = 0;
 ```
-### GetRigidBodyTransformation
+### GetRigidBodyPosition
 ```
-virtual EMCPError GetRigidBodyTransformation(float * x, float * y, float * z,
+virtual EMCPError GetRigidBodyPosition(float * x, float * y, float * z,
         MCPRigidBodyHandle_t ulRigidBodyHandle) = 0;
 ```
-### GetRigidBodieStatus
+### GetRigidBodyStatus
 ```
-virtual EMCPError GetRigidBodieStatus(int * status, 
+virtual EMCPError GetRigidBodyStatus(int * status, 
         MCPRigidBodyHandle_t ulRigidBodyHandle) = 0;
 ```
 ### GetRigidBodyId
@@ -292,6 +292,13 @@ virtual EMCPError GetRigidBodieStatus(int * status,
 virtual EMCPError GetRigidBodyId(int * id,
         MCPRigidBodyHandle_t ulRigidBodyHandle) = 0;
 ```
+
+### GetRigidBodyJointTag
+```
+virtual EMCPError GetRigidBodyJointTag(EMCPJointTag * jointTag_, 
+        MCPRigidBodyHandle_t ulRigidBodyHandle) = 0;
+```
+
 ## IMCPSensorModule & MCPSensorModuleHandle_t
 &emsp;&emsp;使用如下的代码可以获取```IMCPSensorModule```的指针：
 ```
