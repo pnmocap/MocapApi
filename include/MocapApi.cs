@@ -103,9 +103,9 @@ namespace MocapApi
                 return rigidBody;
             }
         }
-        public EMCPError GetRigidBodyRotaion(ref float x, ref float y, ref float z, ref float w, ulong ulRigidBodyHandle)
+        public EMCPError GetRigidBodyRotation(ref float x, ref float y, ref float z, ref float w, ulong ulRigidBodyHandle)
         {
-            return ProcTable.GetRigidBodyRotaion(ref x, ref y, ref z, ref w, ulRigidBodyHandle);
+            return ProcTable.GetRigidBodyRotation(ref x, ref y, ref z, ref w, ulRigidBodyHandle);
         }
         public EMCPError GetRigidBodyPosition(ref float x, ref float y, ref float z, ulong ulRigidBodyHandle)
         {
@@ -127,9 +127,9 @@ namespace MocapApi
         private struct MCPRigidBody_ProcTable
         {
             [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-            internal delegate EMCPError _GetRigidBodyRotaion(ref float x, ref float y, ref float z, ref float w, ulong ulRigidBodyHandle);
+            internal delegate EMCPError _GetRigidBodyRotation(ref float x, ref float y, ref float z, ref float w, ulong ulRigidBodyHandle);
             [MarshalAs(UnmanagedType.FunctionPtr)]
-            internal _GetRigidBodyRotaion GetRigidBodyRotaion;
+            internal _GetRigidBodyRotation GetRigidBodyRotation;
             
             [UnmanagedFunctionPointer(CallingConvention.StdCall)]
             internal delegate EMCPError _GetRigidBodyPosition(ref float x, ref float y, ref float z, ulong ulRigidBodyHandle);
@@ -297,13 +297,13 @@ namespace MocapApi
         {
             return ProcTable.GetJointName(ref ppStr, ulJointHandle);
         }
-        public EMCPError GetJointLocalRotaion(ref float x, ref float y, ref float z, ref float w, ulong ulJointHandle)
+        public EMCPError GetJointLocalRotation(ref float x, ref float y, ref float z, ref float w, ulong ulJointHandle)
         {
-            return ProcTable.GetJointLocalRotaion(ref x, ref y, ref z, ref w, ulJointHandle);
+            return ProcTable.GetJointLocalRotation(ref x, ref y, ref z, ref w, ulJointHandle);
         }
-        public EMCPError GetJointLocalRotaionByEuler(ref float x, ref float y, ref float z, ulong ulJointHandle)
+        public EMCPError GetJointLocalRotationByEuler(ref float x, ref float y, ref float z, ulong ulJointHandle)
         {
-            return ProcTable.GetJointLocalRotaionByEuler(ref x, ref y, ref z, ulJointHandle);
+            return ProcTable.GetJointLocalRotationByEuler(ref x, ref y, ref z, ulJointHandle);
         }
         public EMCPError GetJointLocalPosition(ref float x, ref float y, ref float z, ulong ulJointHandle)
         {
@@ -360,14 +360,14 @@ namespace MocapApi
             internal _GetJointName GetJointName;
             
             [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-            internal delegate EMCPError _GetJointLocalRotaion(ref float x, ref float y, ref float z, ref float w, ulong ulJointHandle);
+            internal delegate EMCPError _GetJointLocalRotation(ref float x, ref float y, ref float z, ref float w, ulong ulJointHandle);
             [MarshalAs(UnmanagedType.FunctionPtr)]
-            internal _GetJointLocalRotaion GetJointLocalRotaion;
+            internal _GetJointLocalRotation GetJointLocalRotation;
             
             [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-            internal delegate EMCPError _GetJointLocalRotaionByEuler(ref float x, ref float y, ref float z, ulong ulJointHandle);
+            internal delegate EMCPError _GetJointLocalRotationByEuler(ref float x, ref float y, ref float z, ulong ulJointHandle);
             [MarshalAs(UnmanagedType.FunctionPtr)]
-            internal _GetJointLocalRotaionByEuler GetJointLocalRotaionByEuler;
+            internal _GetJointLocalRotationByEuler GetJointLocalRotationByEuler;
             
             [UnmanagedFunctionPointer(CallingConvention.StdCall)]
             internal delegate EMCPError _GetJointLocalPosition(ref float x, ref float y, ref float z, ulong ulJointHandle);

@@ -222,14 +222,14 @@ typedef uint64_t MCPJointHandle_t;
 virtual EMCPError GetJointName(const char **, 
         MCPJointHandle_t ulJointHandle) = 0;
 ```
-### GetJointLocalRotaion
+### GetJointLocalRotation
 ```
-virtual EMCPError GetJointLocalRotaion(float * x, float * y, float * z, float * w,
+virtual EMCPError GetJointLocalRotation(float * x, float * y, float * z, float * w,
         MCPJointHandle_t ulJointHandle) = 0;
 ```
-### GetJointLocalRotaionByEuler
+### GetJointLocalRotationByEuler
 ```
-virtual EMCPError GetJointLocalRotaionByEuler(float * x, float * y, float * z,
+virtual EMCPError GetJointLocalRotationByEuler(float * x, float * y, float * z,
         MCPJointHandle_t ulJointHandle) = 0;
 ```
 ### GetJointLocalTransformation
@@ -272,9 +272,9 @@ MocapApi::MCPGetGenericInterface(MocapApi::IMCPRigidBody_Version,
 ```
 typedef uint64_t MCPRigidBodyHandle_t;
 ```
-### GetRigidBodyRotaion
+### GetRigidBodyRotation
 ```
-virtual EMCPError GetRigidBodyRotaion(float * x, float * y, float * z, float * w, 
+virtual EMCPError GetRigidBodyRotation(float * x, float * y, float * z, float * w, 
         MCPRigidBodyHandle_t ulRigidBodyHandle) = 0;
 ```
 ### GetRigidBodyPosition

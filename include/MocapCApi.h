@@ -112,7 +112,7 @@ enum EMCPJointTag{
 };
 typedef uint64_t MCPRigidBodyHandle_t;
 struct MCPRigidBody_ProcTable {
-    EMCPError (MCP_PROC_TABLE_CALLTYPE * GetRigidBodyRotaion) ( float * x, float * y, float * z, float * w, MCPRigidBodyHandle_t ulRigidBodyHandle);
+    EMCPError (MCP_PROC_TABLE_CALLTYPE * GetRigidBodyRotation) ( float * x, float * y, float * z, float * w, MCPRigidBodyHandle_t ulRigidBodyHandle);
     EMCPError (MCP_PROC_TABLE_CALLTYPE * GetRigidBodyPosition) ( float * x, float * y, float * z, MCPRigidBodyHandle_t ulRigidBodyHandle);
     EMCPError (MCP_PROC_TABLE_CALLTYPE * GetRigidBodyStatus) ( int * status, MCPRigidBodyHandle_t ulRigidBodyHandle);
     EMCPError (MCP_PROC_TABLE_CALLTYPE * GetRigidBodyId) ( int * id, MCPRigidBodyHandle_t ulRigidBodyHandle);
@@ -136,8 +136,8 @@ static const char * IMCPBodyPart_Version = "IMCPBodyPart_001";
 typedef uint64_t MCPJointHandle_t;
 struct MCPJoint_ProcTable {
     EMCPError (MCP_PROC_TABLE_CALLTYPE * GetJointName) ( const char ** ppStr, MCPJointHandle_t ulJointHandle);
-    EMCPError (MCP_PROC_TABLE_CALLTYPE * GetJointLocalRotaion) ( float * x, float * y, float * z, float * w, MCPJointHandle_t ulJointHandle);
-    EMCPError (MCP_PROC_TABLE_CALLTYPE * GetJointLocalRotaionByEuler) ( float * x, float * y, float * z, MCPJointHandle_t ulJointHandle);
+    EMCPError (MCP_PROC_TABLE_CALLTYPE * GetJointLocalRotation) ( float * x, float * y, float * z, float * w, MCPJointHandle_t ulJointHandle);
+    EMCPError (MCP_PROC_TABLE_CALLTYPE * GetJointLocalRotationByEuler) ( float * x, float * y, float * z, MCPJointHandle_t ulJointHandle);
     EMCPError (MCP_PROC_TABLE_CALLTYPE * GetJointLocalPosition) ( float * x, float * y, float * z, MCPJointHandle_t ulJointHandle);
     EMCPError (MCP_PROC_TABLE_CALLTYPE * GetJointDefaultLocalPosition) ( float * x, float * y, float * z, MCPJointHandle_t ulJointHandle);
     EMCPError (MCP_PROC_TABLE_CALLTYPE * GetJointChild) ( MCPJointHandle_t * pJointHandle, uint32_t * punSizeOfJointHandle, MCPJointHandle_t ulJointHandle);

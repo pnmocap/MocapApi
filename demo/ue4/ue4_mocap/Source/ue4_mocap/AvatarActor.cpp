@@ -191,16 +191,16 @@ void AAvatarActor::updateJointsTransform(MocapApi::MCPJointHandle_t joint)
         // Get Joint Current Position in local coord-sys [1/8/2021 brian.wang]
         FVector v;
         if(MocapApi::Error_None == jointMgr->GetJointLocalPosition(&v.X, &v.Y, &v.Z, joint)){
-            // Get Joint Current Rotaion in local coord-sys [1/8/2021 brian.wang]
+            // Get Joint Current Rotation in local coord-sys [1/8/2021 brian.wang]
             FQuat q;
-            jointMgr->GetJointLocalRotaion(&q.X, &q.Y, &q.Z, &q.W, joint);
+            jointMgr->GetJointLocalRotation(&q.X, &q.Y, &q.Z, &q.W, joint);
             // Drive joint [1/8/2021 brian.wang]
             jointComponent->SetRelativeLocationAndRotation(v, q);
         }
         else{
-            // Get Joint Current Rotaion in local coord-sys [1/8/2021 brian.wang]
+            // Get Joint Current Rotation in local coord-sys [1/8/2021 brian.wang]
             FQuat q;
-            jointMgr->GetJointLocalRotaion(&q.X, &q.Y, &q.Z, &q.W, joint);
+            jointMgr->GetJointLocalRotation(&q.X, &q.Y, &q.Z, &q.W, joint);
             // Drive joint [1/8/2021 brian.wang]
             jointComponent->SetRelativeRotation(q);
         }

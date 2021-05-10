@@ -122,7 +122,7 @@ namespace MocapApi {
     class IMCPRigidBody
     {
     public:
-        virtual EMCPError GetRigidBodyRotaion(float * x, float * y, float * z, float * w, 
+        virtual EMCPError GetRigidBodyRotation(float * x, float * y, float * z, float * w, 
             MCPRigidBodyHandle_t ulRigidBodyHandle) = 0;
 
         virtual EMCPError GetRigidBodyPosition(float * x, float * y, float * z,
@@ -176,10 +176,10 @@ namespace MocapApi {
         virtual EMCPError GetJointName(const char ** ppStr, 
             MCPJointHandle_t ulJointHandle) = 0;
 
-        virtual EMCPError GetJointLocalRotaion(float * x, float * y, float * z, float * w,
+        virtual EMCPError GetJointLocalRotation(float * x, float * y, float * z, float * w,
             MCPJointHandle_t ulJointHandle) = 0;
 
-        virtual EMCPError GetJointLocalRotaionByEuler(float * x, float * y, float * z,
+        virtual EMCPError GetJointLocalRotationByEuler(float * x, float * y, float * z,
             MCPJointHandle_t ulJointHandle) = 0;
 
         virtual EMCPError GetJointLocalPosition(float * x, float * y, float * z,

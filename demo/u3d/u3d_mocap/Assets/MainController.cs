@@ -99,7 +99,7 @@ public class MainController : MonoBehaviour
             }
             
             Quaternion q = new Quaternion();
-            IMCPJoint.Joint.GetJointLocalRotaion(ref q.x, ref q.y, ref q.z, ref q.w, jointHandle);
+            IMCPJoint.Joint.GetJointLocalRotation(ref q.x, ref q.y, ref q.z, ref q.w, jointHandle);
             jointTranform.localRotation = q;
             uint numberOfChild = 0;
             IMCPJoint.Joint.GetJointChild(null, ref numberOfChild, jointHandle);
