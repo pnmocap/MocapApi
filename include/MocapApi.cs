@@ -1047,7 +1047,7 @@ namespace MocapApi
     }
     internal class Interop
     {
-        [DllImportAttribute("MocapApiD", EntryPoint = "MCPGetGenericInterface", CallingConvention = CallingConvention.Cdecl)]
+        [DllImportAttribute("MocapApi", EntryPoint = "MCPGetGenericInterface", CallingConvention = CallingConvention.Cdecl)]
         internal static extern EMCPError MCPGetGenericInterface([In, MarshalAs(UnmanagedType.LPStr)] string pchInterfaceVersion, ref IntPtr peError);
         internal const string ProcTable_Prefix = "PROC_TABLE:";
     }

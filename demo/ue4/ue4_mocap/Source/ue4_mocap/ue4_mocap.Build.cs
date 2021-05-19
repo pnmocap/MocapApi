@@ -1,29 +1,34 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+﻿// Copyright Epic Games, Inc. All Rights Reserved.
 
 using UnrealBuildTool;
+using System;
+using System.IO;
 
 public class ue4_mocap : ModuleRules
 {
-	public ue4_mocap(ReadOnlyTargetRules Target) : base(Target)
-	{
-		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
-	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore" });
+    public ue4_mocap(ReadOnlyTargetRules Target) : base(Target)
+    {
+        PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
-		PrivateDependencyModuleNames.AddRange(new string[] {  });
 
-		// Uncomment if you are using Slate UI
-		// PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });
+        //PublicIncludePaths.Add();
+        var MocapApiPath = Path.GetFullPath(Path.Combine(ModuleDirectory, "../../../../../"));
+        PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore" });
 
-		// Uncomment if you are using online features
-		// PrivateDependencyModuleNames.Add("OnlineSubsystem");
+        PrivateDependencyModuleNames.AddRange(new string[] { });
 
-		// To include OnlineSubsystemSteam, add it to the plugins section in your uproject file with the Enabled attribute set to true
+        // Uncomment if you are using Slate UI
+        // PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });
 
-		PublicIncludePaths.Add("E:\\work\\MocapApi\\include");
-		PublicAdditionalLibraries.Add("E:\\work\\MocapApi\\vs141_dbg\\lib\\Debug\\MocapApiD.lib");
-		PublicDelayLoadDLLs.Add("MocapApiD.dll");
-		RuntimeDependencies.Add("E:\\work\\MocapApi\\vs141_dbg\\bin\\Debug\\MocapApiD.dll", StagedFileType.NonUFS);
-		RuntimeDependencies.Add("E:\\work\\MocapApi\\vs141_dbg\\bin\\Debug\\MocapApiD.pdb", StagedFileType.DebugNonUFS);
-	}
+        // Uncomment if you are using online features
+        // PrivateDependencyModuleNames.Add("OnlineSubsystem");
+
+        // To include OnlineSubsystemSteam, add it to the plugins section in your uproject file with the Enabled attribute set to true
+
+        PublicIncludePaths.Add(Path.Combine(MocapApiPath, "include"));
+        PublicAdditionalLibraries.Add(Path.Combine(MocapApiPath, "lib/win32/x64", "MocapApi.lib"));
+        var MocapApiDllPath = Path.Combine(MocapApiPath, "bin/win32/x64", "MocapApi.dll");
+        PublicDelayLoadDLLs.Add(MocapApiDllPath);
+        RuntimeDependencies.Add(MocapApiDllPath, StagedFileType.NonUFS);
+    }
 }
