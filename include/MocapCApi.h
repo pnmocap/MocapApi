@@ -124,6 +124,9 @@ struct MCPSensorModule_ProcTable {
     EMCPError (MCP_PROC_TABLE_CALLTYPE * GetSensorModulePosture) ( float * x, float * y, float * z, float * w, MCPSensorModuleHandle_t sensorModuleHandle);
     EMCPError (MCP_PROC_TABLE_CALLTYPE * GetSensorModuleAngularVelocity) ( float * x, float * y, float * z, MCPSensorModuleHandle_t sensorModuleHandle);
     EMCPError (MCP_PROC_TABLE_CALLTYPE * GetSensorModuleAcceleratedVelocity) ( float * x, float * y, float * z, MCPSensorModuleHandle_t sensorModuleHandle);
+    EMCPError (MCP_PROC_TABLE_CALLTYPE * GetSensorModuleId) ( uint32_t * id, MCPSensorModuleHandle_t sensorModuleHandle);
+    EMCPError (MCP_PROC_TABLE_CALLTYPE * GetSensorModuleCompassValue) ( float * x, float * y, float * z, MCPSensorModuleHandle_t sensorModuleHandle);
+    EMCPError (MCP_PROC_TABLE_CALLTYPE * GetSensorModuleTemperature) ( float * temperature, MCPSensorModuleHandle_t sensorModuleHandle);
 };
 static const char * IMCPSensorModule_Version = "IMCPSensorModule_001";
 typedef uint64_t MCPBodyPartHandle_t;
@@ -176,16 +179,21 @@ struct MCPEvent_MotionData_t{
 struct MCPEvent_SystemError_t{
     EMCPError error;
 };
+struct MCPEvent_SensorModuleData_t{
+    MCPSensorModuleHandle_t _sensorModuleHandle;
+};
 union MCPEventData_t{
     MCPEvent_Reserved_t reserved;
     MCPEvent_MotionData_t motionData;
     MCPEvent_SystemError_t systemError;
+    MCPEvent_SensorModuleData_t sensorModuleData;
 };
 enum EMCPEventType{
     MCPEvent_None=0,
     MCPEvent_AvatarUpdated=256,
     MCPEvent_RigidBodyUpdated=512,
     MCPEvent_Error=768,
+    MCPEvent_SensorModulesUpdated=1024,
 };
 struct MCPEvent_t{
     uint32_t size;
@@ -281,6 +289,7 @@ struct MCPApplication_ProcTable {
     EMCPError (MCP_PROC_TABLE_CALLTYPE * GetApplicationRigidBodies) ( MCPRigidBodyHandle_t * pRigidBodyHandle, uint32_t * punRigidBodyHandleSize, MCPApplicationHandle_t ulApplicationHandle);
     EMCPError (MCP_PROC_TABLE_CALLTYPE * GetApplicationAvatars) ( MCPAvatarHandle_t * pAvatarHandle, uint32_t * punAvatarHandle, MCPApplicationHandle_t ulApplicationHandle);
     EMCPError (MCP_PROC_TABLE_CALLTYPE * PollApplicationNextEvent) ( MCPEvent_t * pEvent, uint32_t * punSizeOfEvent, MCPApplicationHandle_t ulApplicationHandle);
+    EMCPError (MCP_PROC_TABLE_CALLTYPE * GetApplicationSensorModules) ( MCPSensorModuleHandle_t * pSensorModuleHandle, uint32_t * punSensorModuleHandle, MCPApplicationHandle_t ulApplicationHandle);
 };
 static const char * IMCPApplication_Version = "IMCPApplication_002";
 MCP_PROC_TABLE_API EMCPError MCPGetGenericInterface ( const char * pchInterfaceVersion, void ** ppInterface);

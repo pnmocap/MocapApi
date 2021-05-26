@@ -187,6 +187,18 @@ namespace MocapApi
         {
             return ProcTable.GetSensorModuleAcceleratedVelocity(ref x, ref y, ref z, sensorModuleHandle);
         }
+        public EMCPError GetSensorModuleId(ref uint id, ulong sensorModuleHandle)
+        {
+            return ProcTable.GetSensorModuleId(ref id, sensorModuleHandle);
+        }
+        public EMCPError GetSensorModuleCompassValue(ref float x, ref float y, ref float z, ulong sensorModuleHandle)
+        {
+            return ProcTable.GetSensorModuleCompassValue(ref x, ref y, ref z, sensorModuleHandle);
+        }
+        public EMCPError GetSensorModuleTemperature(ref float temperature, ulong sensorModuleHandle)
+        {
+            return ProcTable.GetSensorModuleTemperature(ref temperature, sensorModuleHandle);
+        }
         [StructLayout(LayoutKind.Sequential)]
         private struct MCPSensorModule_ProcTable
         {
@@ -204,6 +216,21 @@ namespace MocapApi
             internal delegate EMCPError _GetSensorModuleAcceleratedVelocity(ref float x, ref float y, ref float z, ulong sensorModuleHandle);
             [MarshalAs(UnmanagedType.FunctionPtr)]
             internal _GetSensorModuleAcceleratedVelocity GetSensorModuleAcceleratedVelocity;
+            
+            [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+            internal delegate EMCPError _GetSensorModuleId(ref uint id, ulong sensorModuleHandle);
+            [MarshalAs(UnmanagedType.FunctionPtr)]
+            internal _GetSensorModuleId GetSensorModuleId;
+            
+            [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+            internal delegate EMCPError _GetSensorModuleCompassValue(ref float x, ref float y, ref float z, ulong sensorModuleHandle);
+            [MarshalAs(UnmanagedType.FunctionPtr)]
+            internal _GetSensorModuleCompassValue GetSensorModuleCompassValue;
+            
+            [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+            internal delegate EMCPError _GetSensorModuleTemperature(ref float temperature, ulong sensorModuleHandle);
+            [MarshalAs(UnmanagedType.FunctionPtr)]
+            internal _GetSensorModuleTemperature GetSensorModuleTemperature;
             
         }
         private MCPSensorModule_ProcTable ProcTable;
@@ -573,12 +600,18 @@ namespace MocapApi
     {
         public EMCPError error;
     }
+    [StructLayout(LayoutKind.Sequential)]
+    public struct MCPEvent_SensorModuleData_t
+    {
+        public ulong _sensorModuleHandle;
+    }
     [StructLayout(LayoutKind.Explicit)]
     public struct MCPEventData_t
     {
         [FieldOffset(0)] public MCPEvent_Reserved_t reserved;
         [FieldOffset(0)] public MCPEvent_MotionData_t motionData;
         [FieldOffset(0)] public MCPEvent_SystemError_t systemError;
+        [FieldOffset(0)] public MCPEvent_SensorModuleData_t sensorModuleData;
     };
     public enum EMCPEventType
     {
@@ -586,6 +619,7 @@ namespace MocapApi
         MCPEvent_AvatarUpdated=256,
         MCPEvent_RigidBodyUpdated=512,
         MCPEvent_Error=768,
+        MCPEvent_SensorModulesUpdated=1024,
     };
     [StructLayout(LayoutKind.Sequential)]
     public struct MCPEvent_t
@@ -953,6 +987,10 @@ namespace MocapApi
         {
             return ProcTable.PollApplicationNextEvent(pEvent, ref punSizeOfEvent, ulApplicationHandle);
         }
+        public EMCPError GetApplicationSensorModules(ref ulong pSensorModuleHandle, ref uint punSensorModuleHandle, ulong ulApplicationHandle)
+        {
+            return ProcTable.GetApplicationSensorModules(ref pSensorModuleHandle, ref punSensorModuleHandle, ulApplicationHandle);
+        }
         [StructLayout(LayoutKind.Sequential)]
         private struct MCPApplication_ProcTable
         {
@@ -1016,6 +1054,11 @@ namespace MocapApi
             [MarshalAs(UnmanagedType.FunctionPtr)]
             internal _PollApplicationNextEvent PollApplicationNextEvent;
             
+            [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+            internal delegate EMCPError _GetApplicationSensorModules(ref ulong pSensorModuleHandle, ref uint punSensorModuleHandle, ulong ulApplicationHandle);
+            [MarshalAs(UnmanagedType.FunctionPtr)]
+            internal _GetApplicationSensorModules GetApplicationSensorModules;
+            
         }
         private MCPApplication_ProcTable ProcTable;
         private static IMCPApplication application;
@@ -1047,7 +1090,7 @@ namespace MocapApi
     }
     internal class Interop
     {
-        [DllImportAttribute("MocapApi", EntryPoint = "MCPGetGenericInterface", CallingConvention = CallingConvention.Cdecl)]
+        [DllImportAttribute("MocapApiD", EntryPoint = "MCPGetGenericInterface", CallingConvention = CallingConvention.Cdecl)]
         internal static extern EMCPError MCPGetGenericInterface([In, MarshalAs(UnmanagedType.LPStr)] string pchInterfaceVersion, ref IntPtr peError);
         internal const string ProcTable_Prefix = "PROC_TABLE:";
     }

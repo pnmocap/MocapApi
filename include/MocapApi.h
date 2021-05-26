@@ -151,6 +151,15 @@ namespace MocapApi {
 
         virtual EMCPError GetSensorModuleAcceleratedVelocity(float * x, float * y, float * z, 
             MCPSensorModuleHandle_t sensorModuleHandle) = 0;
+
+        virtual EMCPError GetSensorModuleId(uint32_t * id,
+            MCPSensorModuleHandle_t sensorModuleHandle) = 0;
+
+        virtual EMCPError GetSensorModuleCompassValue(float * x, float * y, float * z,
+            MCPSensorModuleHandle_t sensorModuleHandle) = 0;
+
+        virtual EMCPError GetSensorModuleTemperature(float * temperature, 
+            MCPSensorModuleHandle_t sensorModuleHandle) = 0;
     };
     static const char * IMCPSensorModule_Version = "IMCPSensorModule_001";
 
@@ -267,6 +276,11 @@ namespace MocapApi {
         EMCPError error;
     };
 
+    struct MCPEvent_SensorModuleData_t 
+    {
+        MCPSensorModuleHandle_t _sensorModuleHandle;
+    };
+
     union MCPEventData_t
     {
         MCPEvent_Reserved_t reserved;
@@ -274,6 +288,8 @@ namespace MocapApi {
         MCPEvent_MotionData_t motionData;
 
         MCPEvent_SystemError_t systemError;
+
+        MCPEvent_SensorModuleData_t sensorModuleData;
     };
 
     enum EMCPEventType
@@ -282,6 +298,7 @@ namespace MocapApi {
         MCPEvent_AvatarUpdated = 0x00000100,
         MCPEvent_RigidBodyUpdated = 0x00000200,
         MCPEvent_Error = 0x00000300,
+        MCPEvent_SensorModulesUpdated = 0x00000400,
     };
 
     struct MCPEvent_t
@@ -451,6 +468,12 @@ namespace MocapApi {
         virtual EMCPError PollApplicationNextEvent(
             MCPEvent_t * pEvent /* [in, out,  optional]*/,
             uint32_t * punSizeOfEvent, /* [in, out] */
+            MCPApplicationHandle_t ulApplicationHandle
+        ) = 0;
+
+        virtual EMCPError GetApplicationSensorModules(
+            MCPSensorModuleHandle_t * pSensorModuleHandle,  /*[in, out, optional] */
+            uint32_t * punSensorModuleHandle,         /*[in, out]*/
             MCPApplicationHandle_t ulApplicationHandle
         ) = 0;
     };
