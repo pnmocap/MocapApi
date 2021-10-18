@@ -199,6 +199,10 @@ namespace MocapApi
         {
             return ProcTable.GetSensorModuleTemperature(ref temperature, sensorModuleHandle);
         }
+        public EMCPError GetSensorModuleDataIndex(ref uint dataIndex, ulong sensorModuleHandle)
+        {
+            return ProcTable.GetSensorModuleDataIndex(ref dataIndex, sensorModuleHandle);
+        }
         [StructLayout(LayoutKind.Sequential)]
         private struct MCPSensorModule_ProcTable
         {
@@ -231,6 +235,11 @@ namespace MocapApi
             internal delegate EMCPError _GetSensorModuleTemperature(ref float temperature, ulong sensorModuleHandle);
             [MarshalAs(UnmanagedType.FunctionPtr)]
             internal _GetSensorModuleTemperature GetSensorModuleTemperature;
+            
+            [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+            internal delegate EMCPError _GetSensorModuleDataIndex(ref uint dataIndex, ulong sensorModuleHandle);
+            [MarshalAs(UnmanagedType.FunctionPtr)]
+            internal _GetSensorModuleDataIndex GetSensorModuleDataIndex;
             
         }
         private MCPSensorModule_ProcTable ProcTable;

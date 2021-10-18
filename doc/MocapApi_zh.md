@@ -222,14 +222,14 @@ typedef uint64_t MCPJointHandle_t;
 virtual EMCPError GetJointName(const char **, 
         MCPJointHandle_t ulJointHandle) = 0;
 ```
-### GetJointLocalRotation
+### GetJointLocalRotaion
 ```
-virtual EMCPError GetJointLocalRotation(float * x, float * y, float * z, float * w,
+virtual EMCPError GetJointLocalRotaion(float * x, float * y, float * z, float * w,
         MCPJointHandle_t ulJointHandle) = 0;
 ```
-### GetJointLocalRotationByEuler
+### GetJointLocalRotaionByEuler
 ```
-virtual EMCPError GetJointLocalRotationByEuler(float * x, float * y, float * z,
+virtual EMCPError GetJointLocalRotaionByEuler(float * x, float * y, float * z,
         MCPJointHandle_t ulJointHandle) = 0;
 ```
 ### GetJointLocalTransformation
@@ -272,19 +272,19 @@ MocapApi::MCPGetGenericInterface(MocapApi::IMCPRigidBody_Version,
 ```
 typedef uint64_t MCPRigidBodyHandle_t;
 ```
-### GetRigidBodyRotation
+### GetRigidBodyRotaion
 ```
-virtual EMCPError GetRigidBodyRotation(float * x, float * y, float * z, float * w, 
+virtual EMCPError GetRigidBodyRotaion(float * x, float * y, float * z, float * w, 
         MCPRigidBodyHandle_t ulRigidBodyHandle) = 0;
 ```
-### GetRigidBodyPosition
+### GetRigidBodyTransformation
 ```
-virtual EMCPError GetRigidBodyPosition(float * x, float * y, float * z,
+virtual EMCPError GetRigidBodyTransformation(float * x, float * y, float * z,
         MCPRigidBodyHandle_t ulRigidBodyHandle) = 0;
 ```
-### GetRigidBodyStatus
+### GetRigidBodieStatus
 ```
-virtual EMCPError GetRigidBodyStatus(int * status, 
+virtual EMCPError GetRigidBodieStatus(int * status, 
         MCPRigidBodyHandle_t ulRigidBodyHandle) = 0;
 ```
 ### GetRigidBodyId
@@ -292,13 +292,6 @@ virtual EMCPError GetRigidBodyStatus(int * status,
 virtual EMCPError GetRigidBodyId(int * id,
         MCPRigidBodyHandle_t ulRigidBodyHandle) = 0;
 ```
-
-### GetRigidBodyJointTag
-```
-virtual EMCPError GetRigidBodyJointTag(EMCPJointTag * jointTag_, 
-        MCPRigidBodyHandle_t ulRigidBodyHandle) = 0;
-```
-
 ## IMCPSensorModule & MCPSensorModuleHandle_t
 &emsp;&emsp;使用如下的代码可以获取```IMCPSensorModule```的指针：
 ```
@@ -314,6 +307,7 @@ typedef uint64_t MCPSensorModuleHandle_t;
 virtual EMCPError GetSensorModulePosture(float * x, float * y, float * z, float * w, 
         MCPSensorModuleHandle_t sensorModuleHandle) = 0;
 ```
+&emsp;&emsp;获取姿态四元数。
 ### GetSensorModuleAngularVelocity
 ```
 virtual EMCPError GetSensorModuleAngularVelocity(float * x, float * y, float * z, 
@@ -324,6 +318,24 @@ virtual EMCPError GetSensorModuleAngularVelocity(float * x, float * y, float * z
 virtual EMCPError GetSensorModuleAcceleratedVelocity(float * x, float * y, float * z, 
         MCPSensorModuleHandle_t sensorModuleHandle) = 0;
 ```
+
+### GetSensorModuleId
+```
+virtual EMCPError GetSensorModuleId(uint32_t * id,
+        MCPSensorModuleHandle_t sensorModuleHandle) = 0;
+```
+
+### GetSensorModuleCompassValue
+```
+virtual EMCPError GetSensorModuleCompassValue(float * x, float * y, float * z,
+    MCPSensorModuleHandle_t sensorModuleHandle) = 0;
+```
+### GetSensorModuleTemperature
+```
+virtual EMCPError GetSensorModuleTemperature(float * temperature, 
+        MCPSensorModuleHandle_t sensorModuleHandle) = 0;
+```
+
 ## IMCPBodyPart & MCPBodyPartHandle_t
 &emsp;&emsp;使用如下的代码可以获取```IMCPBodyPart```的指针：
 ```
@@ -492,4 +504,71 @@ virtual EMCPError SetSettingsBvhData(EMCPBvhData bvhData,
 ### SetSettingsCalcData
 ```
 virtual EMCPError SetSettingsCalcData(MCPSettingsHandle_t ulSettingsHandle) = 0;
+```
+
+## MCPEvent_t
+```
+struct MCPEvent_t
+{
+    uint32_t        size;
+    EMCPEventType   eventType;
+    double          fTimestamp;
+    MCPEventData_t  eventData;
+};
+```
+### 成员说明：
+- **size** : 输入值，必须是sizeof(MCPEvent_t)
+- **eventType** : 输出值
+- **fTimestamp** : 自动软件启动以来的时间值
+- **eventData** : 事件的详细信息
+
+## MCPEventData_t
+```
+union MCPEventData_t
+{
+    MCPEvent_Reserved_t reserved;
+
+    MCPEvent_MotionData_t motionData;
+
+    MCPEvent_SystemError_t systemError;
+
+    MCPEvent_SensorModuleData_t sensorModuleData;
+};
+```
+
+## MCPEvent_Reserved_t
+```
+struct MCPEvent_Reserved_t
+{
+    uint64_t reserved0;
+    uint64_t reserved1;
+    uint64_t reserved2;
+    uint64_t reserved3;
+    uint64_t reserved4;
+    uint64_t reserved5;
+};
+```
+
+## MCPEvent_MotionData_t
+```
+struct MCPEvent_MotionData_t 
+{
+    MCPAvatarHandle_t   avatarHandle;
+};
+```
+
+## MCPEvent_SystemError_t
+```
+struct MCPEvent_SystemError_t
+{
+    EMCPError error;
+};
+```
+
+## MCPEvent_SensorModuleData_t
+```
+struct MCPEvent_SensorModuleData_t 
+{
+    MCPSensorModuleHandle_t _sensorModuleHandle;
+};
 ```

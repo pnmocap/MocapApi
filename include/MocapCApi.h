@@ -127,6 +127,7 @@ struct MCPSensorModule_ProcTable {
     EMCPError (MCP_PROC_TABLE_CALLTYPE * GetSensorModuleId) ( uint32_t * id, MCPSensorModuleHandle_t sensorModuleHandle);
     EMCPError (MCP_PROC_TABLE_CALLTYPE * GetSensorModuleCompassValue) ( float * x, float * y, float * z, MCPSensorModuleHandle_t sensorModuleHandle);
     EMCPError (MCP_PROC_TABLE_CALLTYPE * GetSensorModuleTemperature) ( float * temperature, MCPSensorModuleHandle_t sensorModuleHandle);
+    EMCPError (MCP_PROC_TABLE_CALLTYPE * GetSensorModuleDataIndex) ( uint32_t * dataIndex, MCPSensorModuleHandle_t sensorModuleHandle);
 };
 static const char * IMCPSensorModule_Version = "IMCPSensorModule_001";
 typedef uint64_t MCPBodyPartHandle_t;

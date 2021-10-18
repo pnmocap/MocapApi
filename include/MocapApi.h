@@ -1,4 +1,4 @@
-#ifndef _NOITOM_MOCAPAPI_H
+﻿#ifndef _NOITOM_MOCAPAPI_H
 #define _NOITOM_MOCAPAPI_H
 
 #include <cstdint>
@@ -159,6 +159,9 @@ namespace MocapApi {
             MCPSensorModuleHandle_t sensorModuleHandle) = 0;
 
         virtual EMCPError GetSensorModuleTemperature(float * temperature, 
+            MCPSensorModuleHandle_t sensorModuleHandle) = 0;
+
+        virtual EMCPError GetSensorModuleDataIndex(uint32_t * dataIndex,
             MCPSensorModuleHandle_t sensorModuleHandle) = 0;
     };
     static const char * IMCPSensorModule_Version = "IMCPSensorModule_001";
