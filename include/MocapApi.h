@@ -1,4 +1,4 @@
-﻿#ifndef _NOITOM_MOCAPAPI_H
+#ifndef _NOITOM_MOCAPAPI_H
 #define _NOITOM_MOCAPAPI_H
 
 #include <cstdint>
@@ -51,6 +51,11 @@ namespace MocapApi {
         Error_NoneChild,
         Error_AddressInUse,
         Error_ServerNotReady,
+        Error_ClientNotReady,
+        Error_IncompleteCommand,
+        Error_UDP,
+        Error_TCP,
+        Error_QueuedCommandFaild,
     };
 
     enum EMCPJointTag {
@@ -139,6 +144,31 @@ namespace MocapApi {
     };
     static const char * IMCPRigidBody_Version = "IMCPRigidBody_001";
 
+    typedef uint64_t MCPTrackerHandle_t;
+    class IMCPTracker
+    {
+    public:
+        virtual EMCPError SendMessageData(const char* message, int len,
+            MCPTrackerHandle_t ulTrackerHandle) = 0;
+
+        virtual EMCPError GetTrackerRotation(float* x, float* y, float* z, float* w, const char* deviceName,
+            MCPTrackerHandle_t ulTrackerHandle) = 0;
+
+        virtual EMCPError GetTrackerPosition(float* x, float* y, float* z, const char* deviceName,
+            MCPTrackerHandle_t ulTrackerHandle) = 0;
+
+        virtual EMCPError GetTrackerEulerAng(float* x, float* y, float* z, const char* deviceName,
+            MCPTrackerHandle_t ulTrackerHandle) = 0;
+
+        virtual EMCPError GetDeviceCount(int* devCount,
+            MCPTrackerHandle_t ulTrackerHandle) = 0;
+
+        virtual EMCPError GetDeviceName(int serialNum, const char** name,
+            MCPTrackerHandle_t ulTrackerHandle) = 0;
+
+    };
+    static const char* IMCPTracker_Version = "IMCPTracker_001";
+
     typedef uint64_t MCPSensorModuleHandle_t;
     class IMCPSensorModule 
     {
@@ -159,9 +189,6 @@ namespace MocapApi {
             MCPSensorModuleHandle_t sensorModuleHandle) = 0;
 
         virtual EMCPError GetSensorModuleTemperature(float * temperature, 
-            MCPSensorModuleHandle_t sensorModuleHandle) = 0;
-
-        virtual EMCPError GetSensorModuleDataIndex(uint32_t * dataIndex,
             MCPSensorModuleHandle_t sensorModuleHandle) = 0;
     };
     static const char * IMCPSensorModule_Version = "IMCPSensorModule_001";
@@ -259,6 +286,44 @@ namespace MocapApi {
     };
     static const char * IMCPAvatar_Version = "IMCPAvatar_003";
 
+	enum EMCPCommand {
+		CommandStartCapture,
+		CommandStopCapture,
+		CommandZeroPosition,
+		CommandCalibrateMotion,
+		CommandStartRecored,
+		CommandStopRecored,
+	};
+
+	enum EMCPCommandStopCatpureExtraFlag
+	{
+		StopCatpureExtraFlag_SensorsModulesPowerOff,
+		StopCatpureExtraFlag_SensorsModulesHibernate,
+	};
+
+	enum EMCPCommandExtraLong
+	{
+        CommandExtraLong_DeviceRadio,
+        CommandExtraLong_AvatarIndex,
+	};
+
+    typedef uint64_t MCPCommandHandle_t;
+    class IMCPCommand
+    {
+    public:
+
+        virtual EMCPError CreateCommand(uint32_t cmd, MCPCommandHandle_t* handle_) = 0;
+
+        virtual EMCPError SetExtraFlags(uint32_t extraFlags, MCPCommandHandle_t handle_) = 0;
+
+        virtual EMCPError SetExtraLong(uint32_t extraLongIndex, intptr_t extraLong, 
+            MCPCommandHandle_t handle_) = 0;
+
+        virtual EMCPError DestroyCommand(MCPCommandHandle_t handle_) = 0;
+
+    };
+    static const char* IMCPCommand_Version = "IMCPIMCPCommand_001";
+
     struct MCPEvent_Reserved_t
     {
         uint64_t reserved0;
@@ -277,11 +342,22 @@ namespace MocapApi {
     struct MCPEvent_SystemError_t
     {
         EMCPError error;
+        uint64_t info0;
     };
 
     struct MCPEvent_SensorModuleData_t 
     {
         MCPSensorModuleHandle_t _sensorModuleHandle;
+    };
+
+    struct MCPEvent_TrackerData_t
+    {
+        MCPTrackerHandle_t _trackerHandle;
+    };
+
+    struct MCPEvent_CommandRespond_t 
+    {
+        MCPCommandHandle_t _commandHandle;
     };
 
     union MCPEventData_t
@@ -293,6 +369,10 @@ namespace MocapApi {
         MCPEvent_SystemError_t systemError;
 
         MCPEvent_SensorModuleData_t sensorModuleData;
+
+        MCPEvent_TrackerData_t trackerData;
+
+        MCPEvent_CommandRespond_t commandRespond;
     };
 
     enum EMCPEventType
@@ -302,6 +382,8 @@ namespace MocapApi {
         MCPEvent_RigidBodyUpdated = 0x00000200,
         MCPEvent_Error = 0x00000300,
         MCPEvent_SensorModulesUpdated = 0x00000400,
+        MCPEvent_TrackerUpdated = 0x00000500,
+        MCPEvent_CommandRespond = 0x00000600,
     };
 
     struct MCPEvent_t
@@ -360,6 +442,9 @@ namespace MocapApi {
             MCPSettingsHandle_t ulSettingsHandle) = 0;
 
         virtual EMCPError SetSettingsCalcData(MCPSettingsHandle_t ulSettingsHandle) = 0;
+
+		virtual EMCPError SetSettingsUDPServer(const char* serverIp, uint16_t serverPort,
+			MCPSettingsHandle_t ulSettingsHandle) = 0;
     };
     static const char * IMCPSettings_Version = "IMCPSettings_001";
 
@@ -468,6 +553,12 @@ namespace MocapApi {
             MCPApplicationHandle_t ulApplicationHandle
         ) = 0;
 
+        virtual EMCPError GetApplicationTrackers(
+            MCPTrackerHandle_t* pTrackerHandle,  /*[in, out, optional] */
+            uint32_t* punTrackerHandle,         /*[in, out]*/
+            MCPApplicationHandle_t ulApplicationHandle
+        ) = 0;
+
         virtual EMCPError PollApplicationNextEvent(
             MCPEvent_t * pEvent /* [in, out,  optional]*/,
             uint32_t * punSizeOfEvent, /* [in, out] */
@@ -479,10 +570,13 @@ namespace MocapApi {
             uint32_t * punSensorModuleHandle,         /*[in, out]*/
             MCPApplicationHandle_t ulApplicationHandle
         ) = 0;
+
+        virtual EMCPError QueuedServerCommand(MCPCommandHandle_t cmdHandle,   /*[in]*/
+            MCPApplicationHandle_t ulApplicationHandle) = 0;
     };
     static const char * const IMCPApplication_Version = "IMCPApplication_002";
 
-    MCP_INTERFACE EMCPError MCP_CALLTYPE MCPGetGenericInterface(const char * pchInterfaceVersion,
+    extern "C" __declspec(dllexport) EMCPError __cdecl MCPGetGenericInterface(const char * pchInterfaceVersion,
         void ** ppInterface);
 }
 #endif  // end _NOITOM_MOCAPAPI_H [10/30/2020 brian.wang]
