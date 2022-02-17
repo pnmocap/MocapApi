@@ -187,6 +187,7 @@ enum EMCPCommand{
     CommandCalibrateMotion=3,
     CommandStartRecored=4,
     CommandStopRecored=5,
+    CommandResumeOriginalPosture=6,
 };
 enum EMCPCommandStopCatpureExtraFlag{
     StopCatpureExtraFlag_SensorsModulesPowerOff=0,
@@ -194,16 +195,39 @@ enum EMCPCommandStopCatpureExtraFlag{
 };
 enum EMCPCommandExtraLong{
     CommandExtraLong_DeviceRadio=0,
-    CommandExtraLong_AvatarIndex=1,
+    CommandExtraLong_AvatarName=1,
+};
+enum EMCPCommandProgress{
+    CommandProgress_CalibrateMotion=0,
 };
 typedef uint64_t MCPCommandHandle_t;
 struct MCPCommand_ProcTable {
     EMCPError (MCP_PROC_TABLE_CALLTYPE * CreateCommand) ( uint32_t cmd, MCPCommandHandle_t * handle_);
-    EMCPError (MCP_PROC_TABLE_CALLTYPE * SetExtraFlags) ( uint32_t extraFlags, MCPCommandHandle_t handle_);
-    EMCPError (MCP_PROC_TABLE_CALLTYPE * SetExtraLong) ( uint32_t extraLongIndex, intptr_t extraLong, MCPCommandHandle_t handle_);
+    EMCPError (MCP_PROC_TABLE_CALLTYPE * SetCommandExtraFlags) ( uint32_t extraFlags, MCPCommandHandle_t handle_);
+    EMCPError (MCP_PROC_TABLE_CALLTYPE * SetCommandExtraLong) ( uint32_t extraLongIndex, intptr_t extraLong, MCPCommandHandle_t handle_);
+    EMCPError (MCP_PROC_TABLE_CALLTYPE * GetCommandResultMessage) ( const char ** pMsg, MCPCommandHandle_t handle_);
+    EMCPError (MCP_PROC_TABLE_CALLTYPE * GetCommandResultCode) ( uint32_t * pResCode, MCPCommandHandle_t handle_);
+    EMCPError (MCP_PROC_TABLE_CALLTYPE * GetCommandProgress) ( uint32_t progress, intptr_t extra, MCPCommandHandle_t handle_);
     EMCPError (MCP_PROC_TABLE_CALLTYPE * DestroyCommand) ( MCPCommandHandle_t handle_);
 };
-static const char * IMCPCommand_Version = "IMCPIMCPCommand_001";
+static const char * IMCPCommand_Version = "IMCPCommand_001";
+enum EMCPCalibrateMotionProgressStep{
+    CalibrateMotionProgressStep_Prepare=0,
+    CalibrateMotionProgressStep_Countdown=1,
+    CalibrateMotionProgressStep_Progress=2,
+};
+typedef uint64_t MCPCalibrateMotionProgressHandle_t;
+struct MCPCalibrateMotionProgress_ProcTable {
+    EMCPError (MCP_PROC_TABLE_CALLTYPE * GetCalibrateMotionProgressCountOfSupportPoses) ( uint32_t * pCount, MCPCalibrateMotionProgressHandle_t handle_);
+    EMCPError (MCP_PROC_TABLE_CALLTYPE * GetCalibrateMotionProgressNameOfSupportPose) ( char * name, uint32_t * pLenOfName, uint32_t index, MCPCalibrateMotionProgressHandle_t handle_);
+    EMCPError (MCP_PROC_TABLE_CALLTYPE * GetCalibrateMotionProgressStepOfPose) ( uint32_t * pStep, const char * name, MCPCalibrateMotionProgressHandle_t handle_);
+    EMCPError (MCP_PROC_TABLE_CALLTYPE * GetCalibrateMotionProgressCountdownOfPose) ( uint32_t * pCountdown, const char * name, MCPCalibrateMotionProgressHandle_t handle_);
+    EMCPError (MCP_PROC_TABLE_CALLTYPE * GetCalibrateMotionProgressProgressOfPose) ( uint32_t * pProgress, const char * name, MCPCalibrateMotionProgressHandle_t handle_);
+    EMCPError (MCP_PROC_TABLE_CALLTYPE * GetCalibrateMotionProgressStepOfCurrentPose) ( uint32_t * pStep, char * name, uint32_t * pLenOfName, MCPCalibrateMotionProgressHandle_t handle_);
+    EMCPError (MCP_PROC_TABLE_CALLTYPE * GetCalibrateMotionProgressCountdownOfCurrentPose) ( uint32_t * pCountdown, char * name, uint32_t * pLenOfName, MCPCalibrateMotionProgressHandle_t handle_);
+    EMCPError (MCP_PROC_TABLE_CALLTYPE * GetCalibrateMotionProgressProgressOfCurrentPose) ( uint32_t * pProgress, char * name, uint32_t * pLenOfName, MCPCalibrateMotionProgressHandle_t handle_);
+};
+static const char * IMCPCalibrateMotionProgress_Version = "IMCPCalibrateMotionProgress_001";
 struct MCPEvent_Reserved_t{
     uint64_t reserved0;
     uint64_t reserved1;
@@ -225,8 +249,14 @@ struct MCPEvent_SensorModuleData_t{
 struct MCPEvent_TrackerData_t{
     MCPTrackerHandle_t _trackerHandle;
 };
+enum EMCPReplay{
+    MCPReplay_Response=0,
+    MCPReplay_Running=1,
+    MCPReplay_Result=2,
+};
 struct MCPEvent_CommandRespond_t{
     MCPCommandHandle_t _commandHandle;
+    EMCPReplay _replay;
 };
 union MCPEventData_t{
     MCPEvent_Reserved_t reserved;
@@ -243,7 +273,7 @@ enum EMCPEventType{
     MCPEvent_Error=768,
     MCPEvent_SensorModulesUpdated=1024,
     MCPEvent_TrackerUpdated=1280,
-    MCPEvent_CommandRespond=1536,
+    MCPEvent_CommandReply=1536,
 };
 struct MCPEvent_t{
     uint32_t size;
@@ -339,9 +369,9 @@ struct MCPApplication_ProcTable {
     EMCPError (MCP_PROC_TABLE_CALLTYPE * CloseApplication) ( MCPApplicationHandle_t ulApplicationHandle);
     EMCPError (MCP_PROC_TABLE_CALLTYPE * GetApplicationRigidBodies) ( MCPRigidBodyHandle_t * pRigidBodyHandle, uint32_t * punRigidBodyHandleSize, MCPApplicationHandle_t ulApplicationHandle);
     EMCPError (MCP_PROC_TABLE_CALLTYPE * GetApplicationAvatars) ( MCPAvatarHandle_t * pAvatarHandle, uint32_t * punAvatarHandle, MCPApplicationHandle_t ulApplicationHandle);
-    EMCPError (MCP_PROC_TABLE_CALLTYPE * GetApplicationTrackers) ( MCPTrackerHandle_t * pTrackerHandle, uint32_t * punTrackerHandle, MCPApplicationHandle_t ulApplicationHandle);
     EMCPError (MCP_PROC_TABLE_CALLTYPE * PollApplicationNextEvent) ( MCPEvent_t * pEvent, uint32_t * punSizeOfEvent, MCPApplicationHandle_t ulApplicationHandle);
     EMCPError (MCP_PROC_TABLE_CALLTYPE * GetApplicationSensorModules) ( MCPSensorModuleHandle_t * pSensorModuleHandle, uint32_t * punSensorModuleHandle, MCPApplicationHandle_t ulApplicationHandle);
+    EMCPError (MCP_PROC_TABLE_CALLTYPE * GetApplicationTrackers) ( MCPTrackerHandle_t * pTrackerHandle, uint32_t * punTrackerHandle, MCPApplicationHandle_t ulApplicationHandle);
     EMCPError (MCP_PROC_TABLE_CALLTYPE * QueuedServerCommand) ( MCPCommandHandle_t cmdHandle, MCPApplicationHandle_t ulApplicationHandle);
 };
 static const char * IMCPApplication_Version = "IMCPApplication_002";

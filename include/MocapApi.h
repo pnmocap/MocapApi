@@ -293,6 +293,7 @@ namespace MocapApi {
 		CommandCalibrateMotion,
 		CommandStartRecored,
 		CommandStopRecored,
+        CommandResumeOriginalPosture,
 	};
 
 	enum EMCPCommandStopCatpureExtraFlag
@@ -304,8 +305,13 @@ namespace MocapApi {
 	enum EMCPCommandExtraLong
 	{
         CommandExtraLong_DeviceRadio,
-        CommandExtraLong_AvatarIndex,
+        CommandExtraLong_AvatarName,
 	};
+
+    enum EMCPCommandProgress 
+    {
+        CommandProgress_CalibrateMotion,
+    };
 
     typedef uint64_t MCPCommandHandle_t;
     class IMCPCommand
@@ -314,15 +320,60 @@ namespace MocapApi {
 
         virtual EMCPError CreateCommand(uint32_t cmd, MCPCommandHandle_t* handle_) = 0;
 
-        virtual EMCPError SetExtraFlags(uint32_t extraFlags, MCPCommandHandle_t handle_) = 0;
+        virtual EMCPError SetCommandExtraFlags(uint32_t extraFlags, MCPCommandHandle_t handle_) = 0;
 
-        virtual EMCPError SetExtraLong(uint32_t extraLongIndex, intptr_t extraLong, 
+        virtual EMCPError SetCommandExtraLong(uint32_t extraLongIndex, intptr_t extraLong, 
             MCPCommandHandle_t handle_) = 0;
+
+        virtual EMCPError GetCommandResultMessage(const char ** pMsg, MCPCommandHandle_t handle_) = 0;
+
+        virtual EMCPError GetCommandResultCode(uint32_t *pResCode, MCPCommandHandle_t handle_) = 0;
+
+        virtual EMCPError GetCommandProgress(uint32_t progress, intptr_t extra, MCPCommandHandle_t handle_) =0;
 
         virtual EMCPError DestroyCommand(MCPCommandHandle_t handle_) = 0;
 
     };
-    static const char* IMCPCommand_Version = "IMCPIMCPCommand_001";
+    static const char* IMCPCommand_Version = "IMCPCommand_001";
+
+    enum EMCPCalibrateMotionProgressStep 
+    {
+        CalibrateMotionProgressStep_Prepare,
+        CalibrateMotionProgressStep_Countdown,
+        CalibrateMotionProgressStep_Progress,
+    };
+    typedef uint64_t MCPCalibrateMotionProgressHandle_t;
+    class IMCPCalibrateMotionProgress 
+    {
+    public:
+
+        virtual EMCPError GetCalibrateMotionProgressCountOfSupportPoses(uint32_t * pCount, 
+            MCPCalibrateMotionProgressHandle_t handle_) = 0;
+
+        virtual EMCPError GetCalibrateMotionProgressNameOfSupportPose(char* name, uint32_t* pLenOfName, 
+            uint32_t index, MCPCalibrateMotionProgressHandle_t handle_) = 0;
+
+        //  [2/15/2022 Brian.Wang]
+		virtual EMCPError GetCalibrateMotionProgressStepOfPose(uint32_t* pStep, 
+            const char*name, MCPCalibrateMotionProgressHandle_t handle_) = 0;
+
+		virtual EMCPError GetCalibrateMotionProgressCountdownOfPose(uint32_t* pCountdown, 
+            const char*name, MCPCalibrateMotionProgressHandle_t handle_) = 0;
+
+		virtual EMCPError GetCalibrateMotionProgressProgressOfPose(uint32_t* pProgress, 
+            const char*name, MCPCalibrateMotionProgressHandle_t handle_) = 0;
+
+        //  [2/15/2022 Brian.Wang]
+        virtual EMCPError GetCalibrateMotionProgressStepOfCurrentPose(uint32_t * pStep, 
+            char* name, uint32_t * pLenOfName, MCPCalibrateMotionProgressHandle_t handle_) = 0;
+
+        virtual EMCPError GetCalibrateMotionProgressCountdownOfCurrentPose(uint32_t* pCountdown, 
+            char* name, uint32_t* pLenOfName, MCPCalibrateMotionProgressHandle_t handle_) = 0;
+
+        virtual EMCPError GetCalibrateMotionProgressProgressOfCurrentPose(uint32_t* pProgress, 
+            char* name, uint32_t* pLenOfName, MCPCalibrateMotionProgressHandle_t handle_) = 0;
+    };
+    static const char* IMCPCalibrateMotionProgress_Version = "IMCPCalibrateMotionProgress_001";
 
     struct MCPEvent_Reserved_t
     {
@@ -355,9 +406,17 @@ namespace MocapApi {
         MCPTrackerHandle_t _trackerHandle;
     };
 
+	enum EMCPReplay
+	{
+		MCPReplay_Response,
+		MCPReplay_Running,
+		MCPReplay_Result,
+	};
+
     struct MCPEvent_CommandRespond_t 
     {
         MCPCommandHandle_t _commandHandle;
+        EMCPReplay _replay;
     };
 
     union MCPEventData_t
@@ -383,7 +442,7 @@ namespace MocapApi {
         MCPEvent_Error = 0x00000300,
         MCPEvent_SensorModulesUpdated = 0x00000400,
         MCPEvent_TrackerUpdated = 0x00000500,
-        MCPEvent_CommandRespond = 0x00000600,
+        MCPEvent_CommandReply = 0x00000600,
     };
 
     struct MCPEvent_t
@@ -553,12 +612,6 @@ namespace MocapApi {
             MCPApplicationHandle_t ulApplicationHandle
         ) = 0;
 
-        virtual EMCPError GetApplicationTrackers(
-            MCPTrackerHandle_t* pTrackerHandle,  /*[in, out, optional] */
-            uint32_t* punTrackerHandle,         /*[in, out]*/
-            MCPApplicationHandle_t ulApplicationHandle
-        ) = 0;
-
         virtual EMCPError PollApplicationNextEvent(
             MCPEvent_t * pEvent /* [in, out,  optional]*/,
             uint32_t * punSizeOfEvent, /* [in, out] */
@@ -570,6 +623,12 @@ namespace MocapApi {
             uint32_t * punSensorModuleHandle,         /*[in, out]*/
             MCPApplicationHandle_t ulApplicationHandle
         ) = 0;
+
+		virtual EMCPError GetApplicationTrackers(
+			MCPTrackerHandle_t* pTrackerHandle,  /*[in, out, optional] */
+			uint32_t* punTrackerHandle,         /*[in, out]*/
+			MCPApplicationHandle_t ulApplicationHandle
+		) = 0;
 
         virtual EMCPError QueuedServerCommand(MCPCommandHandle_t cmdHandle,   /*[in]*/
             MCPApplicationHandle_t ulApplicationHandle) = 0;

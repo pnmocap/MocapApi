@@ -95,6 +95,13 @@ namespace MocapApi
         JointTag_Spine3=59,
         JointTag_JointsCount=60,
     };
+    public class InterfaceNotFountException : Exception 
+    {
+        public InterfaceNotFountException(string interfaceName) 
+            : base(String.Format("Interface {0} not found!", interfaceName))
+        {
+        }
+    }
     public class IMCPRigidBody
     {
         static public IMCPRigidBody RigidBody
@@ -164,6 +171,10 @@ namespace MocapApi
         {
             IntPtr pp = IntPtr.Zero;
             var er = Interop.MCPGetGenericInterface(Interop.ProcTable_Prefix + IMCPRigidBody_Version, ref pp);
+            if (er != EMCPError.Error_None) 
+            {
+                throw new InterfaceNotFountException(IMCPRigidBody_Version);
+            }
             ProcTable = (MCPRigidBody_ProcTable)Marshal.PtrToStructure(pp, typeof(MCPRigidBody_ProcTable));
         }
     };
@@ -255,6 +266,10 @@ namespace MocapApi
         {
             IntPtr pp = IntPtr.Zero;
             var er = Interop.MCPGetGenericInterface(Interop.ProcTable_Prefix + IMCPTracker_Version, ref pp);
+            if (er != EMCPError.Error_None) 
+            {
+                throw new InterfaceNotFountException(IMCPTracker_Version);
+            }
             ProcTable = (MCPTracker_ProcTable)Marshal.PtrToStructure(pp, typeof(MCPTracker_ProcTable));
         }
     };
@@ -336,6 +351,10 @@ namespace MocapApi
         {
             IntPtr pp = IntPtr.Zero;
             var er = Interop.MCPGetGenericInterface(Interop.ProcTable_Prefix + IMCPSensorModule_Version, ref pp);
+            if (er != EMCPError.Error_None) 
+            {
+                throw new InterfaceNotFountException(IMCPSensorModule_Version);
+            }
             ProcTable = (MCPSensorModule_ProcTable)Marshal.PtrToStructure(pp, typeof(MCPSensorModule_ProcTable));
         }
     };
@@ -390,6 +409,10 @@ namespace MocapApi
         {
             IntPtr pp = IntPtr.Zero;
             var er = Interop.MCPGetGenericInterface(Interop.ProcTable_Prefix + IMCPBodyPart_Version, ref pp);
+            if (er != EMCPError.Error_None) 
+            {
+                throw new InterfaceNotFountException(IMCPBodyPart_Version);
+            }
             ProcTable = (MCPBodyPart_ProcTable)Marshal.PtrToStructure(pp, typeof(MCPBodyPart_ProcTable));
         }
     };
@@ -545,6 +568,10 @@ namespace MocapApi
         {
             IntPtr pp = IntPtr.Zero;
             var er = Interop.MCPGetGenericInterface(Interop.ProcTable_Prefix + IMCPJoint_Version, ref pp);
+            if (er != EMCPError.Error_None) 
+            {
+                throw new InterfaceNotFountException(IMCPJoint_Version);
+            }
             ProcTable = (MCPJoint_ProcTable)Marshal.PtrToStructure(pp, typeof(MCPJoint_ProcTable));
         }
     };
@@ -673,6 +700,10 @@ namespace MocapApi
         {
             IntPtr pp = IntPtr.Zero;
             var er = Interop.MCPGetGenericInterface(Interop.ProcTable_Prefix + IMCPAvatar_Version, ref pp);
+            if (er != EMCPError.Error_None) 
+            {
+                throw new InterfaceNotFountException(IMCPAvatar_Version);
+            }
             ProcTable = (MCPAvatar_ProcTable)Marshal.PtrToStructure(pp, typeof(MCPAvatar_ProcTable));
         }
     };
@@ -684,6 +715,7 @@ namespace MocapApi
         CommandCalibrateMotion=3,
         CommandStartRecored=4,
         CommandStopRecored=5,
+        CommandResumeOriginalPosture=6,
     };
     public enum EMCPCommandStopCatpureExtraFlag
     {
@@ -693,7 +725,11 @@ namespace MocapApi
     public enum EMCPCommandExtraLong
     {
         CommandExtraLong_DeviceRadio=0,
-        CommandExtraLong_AvatarIndex=1,
+        CommandExtraLong_AvatarName=1,
+    };
+    public enum EMCPCommandProgress
+    {
+        CommandProgress_CalibrateMotion=0,
     };
     public class IMCPCommand
     {
@@ -712,13 +748,35 @@ namespace MocapApi
         {
             return ProcTable.CreateCommand(cmd, ref handle_);
         }
-        public EMCPError SetExtraFlags(uint extraFlags, ulong handle_)
+        public EMCPError SetCommandExtraFlags(uint extraFlags, ulong handle_)
         {
-            return ProcTable.SetExtraFlags(extraFlags, handle_);
+            return ProcTable.SetCommandExtraFlags(extraFlags, handle_);
         }
-        public EMCPError SetExtraLong(uint extraLongIndex, intptr_t extraLong, ulong handle_)
+        public EMCPError SetCommandExtraLong(uint extraLongIndex, IntPtr extraLong, ulong handle_)
         {
-            return ProcTable.SetExtraLong(extraLongIndex, extraLong, handle_);
+            return ProcTable.SetCommandExtraLong(extraLongIndex, extraLong, handle_);
+        }
+        public EMCPError GetCommandResultMessage(ref string pMsg, ulong handle_)
+        {
+            IntPtr pMsg_ = IntPtr.Zero;
+            var r = ProcTable.GetCommandResultMessage(ref pMsg_, handle_);
+            if (r == EMCPError.Error_None)
+            {
+                pMsg = Marshal.PtrToStringAnsi(pMsg_);
+            }
+            return r;
+        }
+        public EMCPError GetCommandResultMessage(ref IntPtr pMsg, ulong handle_)
+        {
+            return ProcTable.GetCommandResultMessage(ref pMsg, handle_);
+        }
+        public EMCPError GetCommandResultCode(ref uint pResCode, ulong handle_)
+        {
+            return ProcTable.GetCommandResultCode(ref pResCode, handle_);
+        }
+        public EMCPError GetCommandProgress(uint progress, IntPtr extra, ulong handle_)
+        {
+            return ProcTable.GetCommandProgress(progress, extra, handle_);
         }
         public EMCPError DestroyCommand(ulong handle_)
         {
@@ -733,14 +791,29 @@ namespace MocapApi
             internal _CreateCommand CreateCommand;
             
             [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-            internal delegate EMCPError _SetExtraFlags(uint extraFlags, ulong handle_);
+            internal delegate EMCPError _SetCommandExtraFlags(uint extraFlags, ulong handle_);
             [MarshalAs(UnmanagedType.FunctionPtr)]
-            internal _SetExtraFlags SetExtraFlags;
+            internal _SetCommandExtraFlags SetCommandExtraFlags;
             
             [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-            internal delegate EMCPError _SetExtraLong(uint extraLongIndex, intptr_t extraLong, ulong handle_);
+            internal delegate EMCPError _SetCommandExtraLong(uint extraLongIndex, IntPtr extraLong, ulong handle_);
             [MarshalAs(UnmanagedType.FunctionPtr)]
-            internal _SetExtraLong SetExtraLong;
+            internal _SetCommandExtraLong SetCommandExtraLong;
+            
+            [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+            internal delegate EMCPError _GetCommandResultMessage(ref IntPtr pMsg, ulong handle_);
+            [MarshalAs(UnmanagedType.FunctionPtr)]
+            internal _GetCommandResultMessage GetCommandResultMessage;
+            
+            [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+            internal delegate EMCPError _GetCommandResultCode(ref uint pResCode, ulong handle_);
+            [MarshalAs(UnmanagedType.FunctionPtr)]
+            internal _GetCommandResultCode GetCommandResultCode;
+            
+            [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+            internal delegate EMCPError _GetCommandProgress(uint progress, IntPtr extra, ulong handle_);
+            [MarshalAs(UnmanagedType.FunctionPtr)]
+            internal _GetCommandProgress GetCommandProgress;
             
             [UnmanagedFunctionPointer(CallingConvention.StdCall)]
             internal delegate EMCPError _DestroyCommand(ulong handle_);
@@ -750,12 +823,125 @@ namespace MocapApi
         }
         private MCPCommand_ProcTable ProcTable;
         private static IMCPCommand command;
-        private const string IMCPCommand_Version = "IMCPIMCPCommand_001";
+        private const string IMCPCommand_Version = "IMCPCommand_001";
         private IMCPCommand()
         {
             IntPtr pp = IntPtr.Zero;
             var er = Interop.MCPGetGenericInterface(Interop.ProcTable_Prefix + IMCPCommand_Version, ref pp);
+            if (er != EMCPError.Error_None) 
+            {
+                throw new InterfaceNotFountException(IMCPCommand_Version);
+            }
             ProcTable = (MCPCommand_ProcTable)Marshal.PtrToStructure(pp, typeof(MCPCommand_ProcTable));
+        }
+    };
+    public enum EMCPCalibrateMotionProgressStep
+    {
+        CalibrateMotionProgressStep_Prepare=0,
+        CalibrateMotionProgressStep_Countdown=1,
+        CalibrateMotionProgressStep_Progress=2,
+    };
+    public class IMCPCalibrateMotionProgress
+    {
+        static public IMCPCalibrateMotionProgress CalibrateMotionProgress
+        {
+            get
+            {
+                if (null == calibrateMotionProgress)
+                {
+                    calibrateMotionProgress = new IMCPCalibrateMotionProgress();
+                }
+                return calibrateMotionProgress;
+            }
+        }
+        public EMCPError GetCalibrateMotionProgressCountOfSupportPoses(ref uint pCount, ulong handle_)
+        {
+            return ProcTable.GetCalibrateMotionProgressCountOfSupportPoses(ref pCount, handle_);
+        }
+        public EMCPError GetCalibrateMotionProgressNameOfSupportPose(ref char name, ref uint pLenOfName, uint index, ulong handle_)
+        {
+            return ProcTable.GetCalibrateMotionProgressNameOfSupportPose(ref name, ref pLenOfName, index, handle_);
+        }
+        public EMCPError GetCalibrateMotionProgressStepOfPose(ref uint pStep, string name, ulong handle_)
+        {
+            return ProcTable.GetCalibrateMotionProgressStepOfPose(ref pStep, name, handle_);
+        }
+        public EMCPError GetCalibrateMotionProgressCountdownOfPose(ref uint pCountdown, string name, ulong handle_)
+        {
+            return ProcTable.GetCalibrateMotionProgressCountdownOfPose(ref pCountdown, name, handle_);
+        }
+        public EMCPError GetCalibrateMotionProgressProgressOfPose(ref uint pProgress, string name, ulong handle_)
+        {
+            return ProcTable.GetCalibrateMotionProgressProgressOfPose(ref pProgress, name, handle_);
+        }
+        public EMCPError GetCalibrateMotionProgressStepOfCurrentPose(ref uint pStep, ref char name, ref uint pLenOfName, ulong handle_)
+        {
+            return ProcTable.GetCalibrateMotionProgressStepOfCurrentPose(ref pStep, ref name, ref pLenOfName, handle_);
+        }
+        public EMCPError GetCalibrateMotionProgressCountdownOfCurrentPose(ref uint pCountdown, ref char name, ref uint pLenOfName, ulong handle_)
+        {
+            return ProcTable.GetCalibrateMotionProgressCountdownOfCurrentPose(ref pCountdown, ref name, ref pLenOfName, handle_);
+        }
+        public EMCPError GetCalibrateMotionProgressProgressOfCurrentPose(ref uint pProgress, ref char name, ref uint pLenOfName, ulong handle_)
+        {
+            return ProcTable.GetCalibrateMotionProgressProgressOfCurrentPose(ref pProgress, ref name, ref pLenOfName, handle_);
+        }
+        [StructLayout(LayoutKind.Sequential)]
+        private struct MCPCalibrateMotionProgress_ProcTable
+        {
+            [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+            internal delegate EMCPError _GetCalibrateMotionProgressCountOfSupportPoses(ref uint pCount, ulong handle_);
+            [MarshalAs(UnmanagedType.FunctionPtr)]
+            internal _GetCalibrateMotionProgressCountOfSupportPoses GetCalibrateMotionProgressCountOfSupportPoses;
+            
+            [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+            internal delegate EMCPError _GetCalibrateMotionProgressNameOfSupportPose(ref char name, ref uint pLenOfName, uint index, ulong handle_);
+            [MarshalAs(UnmanagedType.FunctionPtr)]
+            internal _GetCalibrateMotionProgressNameOfSupportPose GetCalibrateMotionProgressNameOfSupportPose;
+            
+            [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+            internal delegate EMCPError _GetCalibrateMotionProgressStepOfPose(ref uint pStep, string name, ulong handle_);
+            [MarshalAs(UnmanagedType.FunctionPtr)]
+            internal _GetCalibrateMotionProgressStepOfPose GetCalibrateMotionProgressStepOfPose;
+            
+            [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+            internal delegate EMCPError _GetCalibrateMotionProgressCountdownOfPose(ref uint pCountdown, string name, ulong handle_);
+            [MarshalAs(UnmanagedType.FunctionPtr)]
+            internal _GetCalibrateMotionProgressCountdownOfPose GetCalibrateMotionProgressCountdownOfPose;
+            
+            [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+            internal delegate EMCPError _GetCalibrateMotionProgressProgressOfPose(ref uint pProgress, string name, ulong handle_);
+            [MarshalAs(UnmanagedType.FunctionPtr)]
+            internal _GetCalibrateMotionProgressProgressOfPose GetCalibrateMotionProgressProgressOfPose;
+            
+            [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+            internal delegate EMCPError _GetCalibrateMotionProgressStepOfCurrentPose(ref uint pStep, ref char name, ref uint pLenOfName, ulong handle_);
+            [MarshalAs(UnmanagedType.FunctionPtr)]
+            internal _GetCalibrateMotionProgressStepOfCurrentPose GetCalibrateMotionProgressStepOfCurrentPose;
+            
+            [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+            internal delegate EMCPError _GetCalibrateMotionProgressCountdownOfCurrentPose(ref uint pCountdown, ref char name, ref uint pLenOfName, ulong handle_);
+            [MarshalAs(UnmanagedType.FunctionPtr)]
+            internal _GetCalibrateMotionProgressCountdownOfCurrentPose GetCalibrateMotionProgressCountdownOfCurrentPose;
+            
+            [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+            internal delegate EMCPError _GetCalibrateMotionProgressProgressOfCurrentPose(ref uint pProgress, ref char name, ref uint pLenOfName, ulong handle_);
+            [MarshalAs(UnmanagedType.FunctionPtr)]
+            internal _GetCalibrateMotionProgressProgressOfCurrentPose GetCalibrateMotionProgressProgressOfCurrentPose;
+            
+        }
+        private MCPCalibrateMotionProgress_ProcTable ProcTable;
+        private static IMCPCalibrateMotionProgress calibrateMotionProgress;
+        private const string IMCPCalibrateMotionProgress_Version = "IMCPCalibrateMotionProgress_001";
+        private IMCPCalibrateMotionProgress()
+        {
+            IntPtr pp = IntPtr.Zero;
+            var er = Interop.MCPGetGenericInterface(Interop.ProcTable_Prefix + IMCPCalibrateMotionProgress_Version, ref pp);
+            if (er != EMCPError.Error_None) 
+            {
+                throw new InterfaceNotFountException(IMCPCalibrateMotionProgress_Version);
+            }
+            ProcTable = (MCPCalibrateMotionProgress_ProcTable)Marshal.PtrToStructure(pp, typeof(MCPCalibrateMotionProgress_ProcTable));
         }
     };
     [StructLayout(LayoutKind.Sequential)]
@@ -789,10 +975,17 @@ namespace MocapApi
     {
         public ulong _trackerHandle;
     }
+    public enum EMCPReplay
+    {
+        MCPReplay_Response=0,
+        MCPReplay_Running=1,
+        MCPReplay_Result=2,
+    };
     [StructLayout(LayoutKind.Sequential)]
     public struct MCPEvent_CommandRespond_t
     {
         public ulong _commandHandle;
+        public EMCPReplay _replay;
     }
     [StructLayout(LayoutKind.Explicit)]
     public struct MCPEventData_t
@@ -812,7 +1005,7 @@ namespace MocapApi
         MCPEvent_Error=768,
         MCPEvent_SensorModulesUpdated=1024,
         MCPEvent_TrackerUpdated=1280,
-        MCPEvent_CommandRespond=1536,
+        MCPEvent_CommandReply=1536,
     };
     [StructLayout(LayoutKind.Sequential)]
     public struct MCPEvent_t
@@ -948,6 +1141,10 @@ namespace MocapApi
         {
             IntPtr pp = IntPtr.Zero;
             var er = Interop.MCPGetGenericInterface(Interop.ProcTable_Prefix + IMCPSettings_Version, ref pp);
+            if (er != EMCPError.Error_None) 
+            {
+                throw new InterfaceNotFountException(IMCPSettings_Version);
+            }
             ProcTable = (MCPSettings_ProcTable)Marshal.PtrToStructure(pp, typeof(MCPSettings_ProcTable));
         }
     };
@@ -1125,6 +1322,10 @@ namespace MocapApi
         {
             IntPtr pp = IntPtr.Zero;
             var er = Interop.MCPGetGenericInterface(Interop.ProcTable_Prefix + IMCPRenderSettings_Version, ref pp);
+            if (er != EMCPError.Error_None) 
+            {
+                throw new InterfaceNotFountException(IMCPRenderSettings_Version);
+            }
             ProcTable = (MCPRenderSettings_ProcTable)Marshal.PtrToStructure(pp, typeof(MCPRenderSettings_ProcTable));
         }
     };
@@ -1185,10 +1386,6 @@ namespace MocapApi
         {
             return ProcTable.GetApplicationAvatars(ref pAvatarHandle, ref punAvatarHandle, ulApplicationHandle);
         }
-        public EMCPError GetApplicationTrackers(ref ulong pTrackerHandle, ref uint punTrackerHandle, ulong ulApplicationHandle)
-        {
-            return ProcTable.GetApplicationTrackers(ref pTrackerHandle, ref punTrackerHandle, ulApplicationHandle);
-        }
         public EMCPError PollApplicationNextEvent([In, Out]MCPEvent_t[] pEvent, ref uint punSizeOfEvent, ulong ulApplicationHandle)
         {
             return ProcTable.PollApplicationNextEvent(pEvent, ref punSizeOfEvent, ulApplicationHandle);
@@ -1196,6 +1393,10 @@ namespace MocapApi
         public EMCPError GetApplicationSensorModules(ref ulong pSensorModuleHandle, ref uint punSensorModuleHandle, ulong ulApplicationHandle)
         {
             return ProcTable.GetApplicationSensorModules(ref pSensorModuleHandle, ref punSensorModuleHandle, ulApplicationHandle);
+        }
+        public EMCPError GetApplicationTrackers(ref ulong pTrackerHandle, ref uint punTrackerHandle, ulong ulApplicationHandle)
+        {
+            return ProcTable.GetApplicationTrackers(ref pTrackerHandle, ref punTrackerHandle, ulApplicationHandle);
         }
         public EMCPError QueuedServerCommand(ulong cmdHandle, ulong ulApplicationHandle)
         {
@@ -1260,11 +1461,6 @@ namespace MocapApi
             internal _GetApplicationAvatars GetApplicationAvatars;
             
             [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-            internal delegate EMCPError _GetApplicationTrackers(ref ulong pTrackerHandle, ref uint punTrackerHandle, ulong ulApplicationHandle);
-            [MarshalAs(UnmanagedType.FunctionPtr)]
-            internal _GetApplicationTrackers GetApplicationTrackers;
-            
-            [UnmanagedFunctionPointer(CallingConvention.StdCall)]
             internal delegate EMCPError _PollApplicationNextEvent([In, Out]MCPEvent_t[] pEvent, ref uint punSizeOfEvent, ulong ulApplicationHandle);
             [MarshalAs(UnmanagedType.FunctionPtr)]
             internal _PollApplicationNextEvent PollApplicationNextEvent;
@@ -1273,6 +1469,11 @@ namespace MocapApi
             internal delegate EMCPError _GetApplicationSensorModules(ref ulong pSensorModuleHandle, ref uint punSensorModuleHandle, ulong ulApplicationHandle);
             [MarshalAs(UnmanagedType.FunctionPtr)]
             internal _GetApplicationSensorModules GetApplicationSensorModules;
+            
+            [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+            internal delegate EMCPError _GetApplicationTrackers(ref ulong pTrackerHandle, ref uint punTrackerHandle, ulong ulApplicationHandle);
+            [MarshalAs(UnmanagedType.FunctionPtr)]
+            internal _GetApplicationTrackers GetApplicationTrackers;
             
             [UnmanagedFunctionPointer(CallingConvention.StdCall)]
             internal delegate EMCPError _QueuedServerCommand(ulong cmdHandle, ulong ulApplicationHandle);
@@ -1287,6 +1488,10 @@ namespace MocapApi
         {
             IntPtr pp = IntPtr.Zero;
             var er = Interop.MCPGetGenericInterface(Interop.ProcTable_Prefix + IMCPApplication_Version, ref pp);
+            if (er != EMCPError.Error_None) 
+            {
+                throw new InterfaceNotFountException(IMCPApplication_Version);
+            }
             ProcTable = (MCPApplication_ProcTable)Marshal.PtrToStructure(pp, typeof(MCPApplication_ProcTable));
         }
     };
