@@ -49,9 +49,9 @@ AAvatarActor::AAvatarActor()
             mcpError = mcpSettings->SetSettingsBvhTransformation(MocapApi::BvhTransformation_Enable, mcpSettingsHandle);
             check(mcpError == MocapApi::Error_None);
 #if 1   //  same as "Bvh Broadcasting" -> "Protocol" -> "UDP" -> "Port" in PNS Setting
-            mcpError = mcpSettings->SetSettingsUDP(8088, mcpSettingsHandle);
+            mcpError = mcpSettings->SetSettingsUDP(7002, mcpSettingsHandle);
 #else   //  same as "Bvh Broadcasting" -> "Protocol" -> "TCP" -> "Local IP" -> "IP" and "Port" in PNS Setting
-            mcpError = mcpSettings->SetSettingsTCP("127.0.0.1", 7003, mcpSettingsHandle);
+            mcpError = mcpSettings->SetSettingsTCP("127.0.0.1", 7002, mcpSettingsHandle);
 #endif
             check(mcpError == MocapApi::Error_None);
         }
