@@ -3,6 +3,7 @@ using System.Runtime.InteropServices;
 #if UNITY_5_3_OR_NEWER
     using UnityEngine;
 #endif
+
 namespace MocapApi
 {
     public enum EMCPError
@@ -1515,7 +1516,11 @@ namespace MocapApi
     }
     internal class Interop
     {
+#if UNITY_IOS
+        [DllImportAttribute("__Internal", EntryPoint = "MCPGetGenericInterface", CallingConvention = CallingConvention.Cdecl)]
+#else
         [DllImportAttribute("MocapApi", EntryPoint = "MCPGetGenericInterface", CallingConvention = CallingConvention.Cdecl)]
+#endif
         internal static extern EMCPError MCPGetGenericInterface([In, MarshalAs(UnmanagedType.LPStr)] string pchInterfaceVersion, ref IntPtr peError);
         internal const string ProcTable_Prefix = "PROC_TABLE:";
     }
