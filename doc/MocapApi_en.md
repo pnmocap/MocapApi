@@ -62,8 +62,8 @@ There are two kinds of errors in MocapApi. One is a function call error, such as
 
 #  Logic Flow Chart
 
+![open_motion_api_EN](https://user-images.githubusercontent.com/86640695/169467424-721ac56b-7720-4970-8175-b407a807a5a4.png)
 
-![][1]
 
 # Detailed Description of types
 
