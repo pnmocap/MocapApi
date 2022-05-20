@@ -8,4 +8,4 @@ English Documentation : https://documentation.neuronmocap.com/mocapapi-v1/Defaul
 ## Run Demo
 
 - Run install.bat
-- Use U3D or Ureal open demo
+- Use U3D or Unreal open demo
