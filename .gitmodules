@@ -1,0 +1,6 @@
+[submodule "demo/wtl/third/spdlog"]
+	path = demo/wtl/third/spdlog
+	url = https://github.com/gabime/spdlog.git
+[submodule "demo/wtl/third/WTL"]
+	path = demo/wtl/third/WTL
+	url = https://github.com/Win32-WTL/WTL.git
