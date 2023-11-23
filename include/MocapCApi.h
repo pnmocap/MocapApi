@@ -21,8 +21,8 @@
 
 #define MOCAP_API_VERSION_MAJOR 0
 #define MOCAP_API_VERSION_MINOR 0
-#define MOCAP_API_VERSION_BUILD 11
-#define MOCAP_API_VERSION_REVISION ed4a7791
+#define MOCAP_API_VERSION_BUILD 15
+#define MOCAP_API_VERSION_REVISION bd3bb7a6
 
 enum EMCPError
 {
@@ -122,6 +122,7 @@ struct MCPRigidBody_ProcTable {
     EMCPError (MCP_PROC_TABLE_CALLTYPE * GetRigidBodyStatus) (int * status, MCPRigidBodyHandle_t ulRigidBodyHandle);
     EMCPError (MCP_PROC_TABLE_CALLTYPE * GetRigidBodyId) (int * id, MCPRigidBodyHandle_t ulRigidBodyHandle);
     EMCPError (MCP_PROC_TABLE_CALLTYPE * GetRigidBodyJointTag) (EMCPJointTag * jointTag_, MCPRigidBodyHandle_t ulRigidBodyHandle);
+    EMCPError (MCP_PROC_TABLE_CALLTYPE * GetRigidBodyAxisAngle) (float * x, float * y, float * z, float * angle, MCPRigidBodyHandle_t ulRigidBodyHandle);
 };
 static const char * IMCPRigidBody_Version = "PROC_TABLE:IMCPRigidBody_001";
 typedef uint64_t MCPTrackerHandle_t;
@@ -180,6 +181,31 @@ struct MCPAvatar_ProcTable {
     EMCPError (MCP_PROC_TABLE_CALLTYPE * GetAvatarPostureTimeCode) (uint32_t * hour, uint32_t * minute, uint32_t * second, uint32_t * frame, uint32_t * rate, MCPAvatarHandle_t ulAvatarHandle);
 };
 static const char * IMCPAvatar_Version = "PROC_TABLE:IMCPAvatar_003";
+typedef uint64_t MCPMarkerHandle_t;
+struct MCPMarker_ProcTable {
+    EMCPError (MCP_PROC_TABLE_CALLTYPE * GetMarkerPosition) (float * x, float * y, float * z, MCPMarkerHandle_t handle);
+};
+static const char * IMCPMarker_Version = "PROC_TABLE:IMCPMarker_001";
+typedef uint64_t MCPPWRHandle_t;
+struct MCPPWR_ProcTable {
+    EMCPError (MCP_PROC_TABLE_CALLTYPE * GetPWRId) (uint32_t * id, MCPPWRHandle_t handle);
+    EMCPError (MCP_PROC_TABLE_CALLTYPE * GetPWRStatus) (int * status, MCPPWRHandle_t handle);
+    EMCPError (MCP_PROC_TABLE_CALLTYPE * GetPWRPosition) (float * x, float * y, float * z, MCPPWRHandle_t handle);
+    EMCPError (MCP_PROC_TABLE_CALLTYPE * GetPWRQuaternion) (float * x, float * y, float * z, float * w, MCPPWRHandle_t handle);
+};
+static const char * IMCPPWR_Version = "PROC_TABLE:IMCPPWR_001";
+typedef uint64_t MCPAliceBusHandle_t;
+struct MCPAliceHub_ProcTable {
+    EMCPError (MCP_PROC_TABLE_CALLTYPE * GetSensorModuleList) (MCPSensorModuleHandle_t * pHandles, uint32_t * nHandles);
+    EMCPError (MCP_PROC_TABLE_CALLTYPE * GetSensorModuleTimestamp) (uint64_t * timestamp);
+    EMCPError (MCP_PROC_TABLE_CALLTYPE * GetMarkerList) (MCPMarkerHandle_t * pHandles, uint32_t * nHandles);
+    EMCPError (MCP_PROC_TABLE_CALLTYPE * GetMarkerTimestamp) (uint64_t * timestamp);
+    EMCPError (MCP_PROC_TABLE_CALLTYPE * GetRigidBodyList) (MCPRigidBodyHandle_t * pHandles, uint32_t * nHandles);
+    EMCPError (MCP_PROC_TABLE_CALLTYPE * GetRigidBodyTimestamp) (uint64_t * timestamp);
+    EMCPError (MCP_PROC_TABLE_CALLTYPE * GetPWRList) (MCPPWRHandle_t * pHandles, uint32_t * nHandles);
+    EMCPError (MCP_PROC_TABLE_CALLTYPE * GetPWRTimestamp) (uint64_t * timestamp);
+};
+static const char * IMCPAliceHub_Version = "PROC_TABLE:IMCPAliceHub_001";
 enum EMCPCommand
 {
     CommandStartCapture=0,
@@ -189,6 +215,15 @@ enum EMCPCommand
     CommandStartRecored=4,
     CommandStopRecored=5,
     CommandResumeOriginalPosture=6
+};
+enum EMCPCalibrateMotionFlag
+{
+    CalibrateMotionFlag_AutoNextStep=0,
+    CalibrateMotionFlag_ManualNextStep=1
+};
+enum EMCPCalibrateMotionOperation
+{
+    CalibrateMotionOperation_Next=0
 };
 enum EMCPCommandStopCatpureExtraFlag
 {
@@ -268,6 +303,14 @@ struct MCPEvent_TrackerData_t
 {
     MCPTrackerHandle_t _trackerHandle;
 };
+struct MCPEvent_MarkerData_t
+{
+    MCPMarkerHandle_t _markerHandle;
+};
+struct MCPEvent_PWRData_t
+{
+    MCPPWRHandle_t _pwrHandle;
+};
 enum EMCPNotify
 {
     Notify_RecordStarted=0,
@@ -298,6 +341,8 @@ union MCPEventData_t
     MCPEvent_SensorModuleData_t sensorModuleData;
     MCPEvent_TrackerData_t trackerData;
     MCPEvent_CommandRespond_t commandRespond;
+    MCPEvent_MarkerData_t markerData;
+    MCPEvent_PWRData_t pwrData;
     MCPEvent_NotifyData_t notifyData;
 };
 enum EMCPEventType
@@ -309,7 +354,11 @@ enum EMCPEventType
     MCPEvent_SensorModulesUpdated=1024,
     MCPEvent_TrackerUpdated=1280,
     MCPEvent_CommandReply=1536,
-    MCPEvent_Notify=1792
+    MCPEvent_Notify=1792,
+    MCPEvent_AliceIMUUpdated=4096,
+    MCPEvent_AliceRigidbodyUpdated=4097,
+    MCPEvent_AliceTrackerUpdated=4098,
+    MCPEvent_AliceMarkerUpdated=4099
 };
 struct MCPEvent_t
 {

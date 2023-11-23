@@ -136,6 +136,10 @@ namespace MocapApi
         {
             return ProcTable.GetRigidBodyJointTag(ref jointTag_, ulRigidBodyHandle);
         }
+        public EMCPError GetRigidBodyAxisAngle(ref float x, ref float y, ref float z, ref float angle, ulong ulRigidBodyHandle)
+        {
+            return ProcTable.GetRigidBodyAxisAngle(ref x, ref y, ref z, ref angle, ulRigidBodyHandle);
+        }
         [StructLayout(LayoutKind.Sequential)]
         private struct MCPRigidBody_ProcTable
         {
@@ -163,6 +167,11 @@ namespace MocapApi
             internal delegate EMCPError _GetRigidBodyJointTag(ref EMCPJointTag jointTag_, ulong ulRigidBodyHandle);
             [MarshalAs(UnmanagedType.FunctionPtr)]
             internal _GetRigidBodyJointTag GetRigidBodyJointTag;
+
+            [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+            internal delegate EMCPError _GetRigidBodyAxisAngle(ref float x, ref float y, ref float z, ref float angle, ulong ulRigidBodyHandle);
+            [MarshalAs(UnmanagedType.FunctionPtr)]
+            internal _GetRigidBodyAxisAngle GetRigidBodyAxisAngle;
 
         };
         private MCPRigidBody_ProcTable ProcTable;
@@ -688,6 +697,216 @@ namespace MocapApi
             ProcTable = (MCPAvatar_ProcTable)Marshal.PtrToStructure(pp, typeof(MCPAvatar_ProcTable));
         }
     };
+    public class IMCPMarker
+    {
+        static public IMCPMarker Marker
+        {
+            get
+            {
+                if (null == marker)
+                {
+                    marker = new IMCPMarker();
+                }
+                return marker;
+            }
+        }
+        public EMCPError GetMarkerPosition(ref float x, ref float y, ref float z, ulong handle)
+        {
+            return ProcTable.GetMarkerPosition(ref x, ref y, ref z, handle);
+        }
+        [StructLayout(LayoutKind.Sequential)]
+        private struct MCPMarker_ProcTable
+        {
+            [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+            internal delegate EMCPError _GetMarkerPosition(ref float x, ref float y, ref float z, ulong handle);
+            [MarshalAs(UnmanagedType.FunctionPtr)]
+            internal _GetMarkerPosition GetMarkerPosition;
+
+        };
+        private MCPMarker_ProcTable ProcTable;
+        private static IMCPMarker marker;
+        private const string IMCPMarker_Version = "IMCPMarker_001";
+        private IMCPMarker()
+        {
+            IntPtr pp = IntPtr.Zero;
+            var er = Interop.MCPGetGenericInterface(Interop.ProcTable_Prefix + IMCPMarker_Version, ref pp);
+            if (er != EMCPError.Error_None)
+            {
+                throw new InterfaceNotFountException(IMCPMarker_Version);
+            }
+            ProcTable = (MCPMarker_ProcTable)Marshal.PtrToStructure(pp, typeof(MCPMarker_ProcTable));
+        }
+    };
+    public class IMCPPWR
+    {
+        static public IMCPPWR PWR
+        {
+            get
+            {
+                if (null == pWR)
+                {
+                    pWR = new IMCPPWR();
+                }
+                return pWR;
+            }
+        }
+        public EMCPError GetPWRId(ref uint id, ulong handle)
+        {
+            return ProcTable.GetPWRId(ref id, handle);
+        }
+        public EMCPError GetPWRStatus(ref int status, ulong handle)
+        {
+            return ProcTable.GetPWRStatus(ref status, handle);
+        }
+        public EMCPError GetPWRPosition(ref float x, ref float y, ref float z, ulong handle)
+        {
+            return ProcTable.GetPWRPosition(ref x, ref y, ref z, handle);
+        }
+        public EMCPError GetPWRQuaternion(ref float x, ref float y, ref float z, ref float w, ulong handle)
+        {
+            return ProcTable.GetPWRQuaternion(ref x, ref y, ref z, ref w, handle);
+        }
+        [StructLayout(LayoutKind.Sequential)]
+        private struct MCPPWR_ProcTable
+        {
+            [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+            internal delegate EMCPError _GetPWRId(ref uint id, ulong handle);
+            [MarshalAs(UnmanagedType.FunctionPtr)]
+            internal _GetPWRId GetPWRId;
+
+            [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+            internal delegate EMCPError _GetPWRStatus(ref int status, ulong handle);
+            [MarshalAs(UnmanagedType.FunctionPtr)]
+            internal _GetPWRStatus GetPWRStatus;
+
+            [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+            internal delegate EMCPError _GetPWRPosition(ref float x, ref float y, ref float z, ulong handle);
+            [MarshalAs(UnmanagedType.FunctionPtr)]
+            internal _GetPWRPosition GetPWRPosition;
+
+            [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+            internal delegate EMCPError _GetPWRQuaternion(ref float x, ref float y, ref float z, ref float w, ulong handle);
+            [MarshalAs(UnmanagedType.FunctionPtr)]
+            internal _GetPWRQuaternion GetPWRQuaternion;
+
+        };
+        private MCPPWR_ProcTable ProcTable;
+        private static IMCPPWR pWR;
+        private const string IMCPPWR_Version = "IMCPPWR_001";
+        private IMCPPWR()
+        {
+            IntPtr pp = IntPtr.Zero;
+            var er = Interop.MCPGetGenericInterface(Interop.ProcTable_Prefix + IMCPPWR_Version, ref pp);
+            if (er != EMCPError.Error_None)
+            {
+                throw new InterfaceNotFountException(IMCPPWR_Version);
+            }
+            ProcTable = (MCPPWR_ProcTable)Marshal.PtrToStructure(pp, typeof(MCPPWR_ProcTable));
+        }
+    };
+    public class IMCPAliceHub
+    {
+        static public IMCPAliceHub AliceHub
+        {
+            get
+            {
+                if (null == aliceHub)
+                {
+                    aliceHub = new IMCPAliceHub();
+                }
+                return aliceHub;
+            }
+        }
+        public EMCPError GetSensorModuleList([In, Out]ulong[] pHandles, ref uint nHandles)
+        {
+            return ProcTable.GetSensorModuleList(pHandles, ref nHandles);
+        }
+        public EMCPError GetSensorModuleTimestamp(ref ulong timestamp)
+        {
+            return ProcTable.GetSensorModuleTimestamp(ref timestamp);
+        }
+        public EMCPError GetMarkerList([In, Out]ulong[] pHandles, ref uint nHandles)
+        {
+            return ProcTable.GetMarkerList(pHandles, ref nHandles);
+        }
+        public EMCPError GetMarkerTimestamp(ref ulong timestamp)
+        {
+            return ProcTable.GetMarkerTimestamp(ref timestamp);
+        }
+        public EMCPError GetRigidBodyList([In, Out]ulong[] pHandles, ref uint nHandles)
+        {
+            return ProcTable.GetRigidBodyList(pHandles, ref nHandles);
+        }
+        public EMCPError GetRigidBodyTimestamp(ref ulong timestamp)
+        {
+            return ProcTable.GetRigidBodyTimestamp(ref timestamp);
+        }
+        public EMCPError GetPWRList([In, Out]ulong[] pHandles, ref uint nHandles)
+        {
+            return ProcTable.GetPWRList(pHandles, ref nHandles);
+        }
+        public EMCPError GetPWRTimestamp(ref ulong timestamp)
+        {
+            return ProcTable.GetPWRTimestamp(ref timestamp);
+        }
+        [StructLayout(LayoutKind.Sequential)]
+        private struct MCPAliceHub_ProcTable
+        {
+            [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+            internal delegate EMCPError _GetSensorModuleList([In, Out]ulong[] pHandles, ref uint nHandles);
+            [MarshalAs(UnmanagedType.FunctionPtr)]
+            internal _GetSensorModuleList GetSensorModuleList;
+
+            [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+            internal delegate EMCPError _GetSensorModuleTimestamp(ref ulong timestamp);
+            [MarshalAs(UnmanagedType.FunctionPtr)]
+            internal _GetSensorModuleTimestamp GetSensorModuleTimestamp;
+
+            [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+            internal delegate EMCPError _GetMarkerList([In, Out]ulong[] pHandles, ref uint nHandles);
+            [MarshalAs(UnmanagedType.FunctionPtr)]
+            internal _GetMarkerList GetMarkerList;
+
+            [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+            internal delegate EMCPError _GetMarkerTimestamp(ref ulong timestamp);
+            [MarshalAs(UnmanagedType.FunctionPtr)]
+            internal _GetMarkerTimestamp GetMarkerTimestamp;
+
+            [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+            internal delegate EMCPError _GetRigidBodyList([In, Out]ulong[] pHandles, ref uint nHandles);
+            [MarshalAs(UnmanagedType.FunctionPtr)]
+            internal _GetRigidBodyList GetRigidBodyList;
+
+            [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+            internal delegate EMCPError _GetRigidBodyTimestamp(ref ulong timestamp);
+            [MarshalAs(UnmanagedType.FunctionPtr)]
+            internal _GetRigidBodyTimestamp GetRigidBodyTimestamp;
+
+            [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+            internal delegate EMCPError _GetPWRList([In, Out]ulong[] pHandles, ref uint nHandles);
+            [MarshalAs(UnmanagedType.FunctionPtr)]
+            internal _GetPWRList GetPWRList;
+
+            [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+            internal delegate EMCPError _GetPWRTimestamp(ref ulong timestamp);
+            [MarshalAs(UnmanagedType.FunctionPtr)]
+            internal _GetPWRTimestamp GetPWRTimestamp;
+
+        };
+        private MCPAliceHub_ProcTable ProcTable;
+        private static IMCPAliceHub aliceHub;
+        private const string IMCPAliceHub_Version = "IMCPAliceHub_001";
+        private IMCPAliceHub()
+        {
+            IntPtr pp = IntPtr.Zero;
+            var er = Interop.MCPGetGenericInterface(Interop.ProcTable_Prefix + IMCPAliceHub_Version, ref pp);
+            if (er != EMCPError.Error_None)
+            {
+                throw new InterfaceNotFountException(IMCPAliceHub_Version);
+            }
+            ProcTable = (MCPAliceHub_ProcTable)Marshal.PtrToStructure(pp, typeof(MCPAliceHub_ProcTable));
+        }
+    };
     public enum EMCPCommand
     {
         CommandStartCapture=0,
@@ -697,6 +916,15 @@ namespace MocapApi
         CommandStartRecored=4,
         CommandStopRecored=5,
         CommandResumeOriginalPosture=6
+    };
+    public enum EMCPCalibrateMotionFlag
+    {
+        CalibrateMotionFlag_AutoNextStep=0,
+        CalibrateMotionFlag_ManualNextStep=1
+    };
+    public enum EMCPCalibrateMotionOperation
+    {
+        CalibrateMotionOperation_Next=0
     };
     public enum EMCPCommandStopCatpureExtraFlag
     {
@@ -1007,6 +1235,16 @@ namespace MocapApi
     {
         public ulong _trackerHandle;
     };
+    [StructLayout(LayoutKind.Sequential)]
+    public struct MCPEvent_MarkerData_t
+    {
+        public ulong _markerHandle;
+    };
+    [StructLayout(LayoutKind.Sequential)]
+    public struct MCPEvent_PWRData_t
+    {
+        public ulong _pwrHandle;
+    };
     public enum EMCPNotify
     {
         Notify_RecordStarted=0,
@@ -1040,6 +1278,8 @@ namespace MocapApi
         [FieldOffset(0)] public MCPEvent_SensorModuleData_t sensorModuleData;
         [FieldOffset(0)] public MCPEvent_TrackerData_t trackerData;
         [FieldOffset(0)] public MCPEvent_CommandRespond_t commandRespond;
+        [FieldOffset(0)] public MCPEvent_MarkerData_t markerData;
+        [FieldOffset(0)] public MCPEvent_PWRData_t pwrData;
         [FieldOffset(0)] public MCPEvent_NotifyData_t notifyData;
     };
     public enum EMCPEventType
@@ -1051,7 +1291,11 @@ namespace MocapApi
         MCPEvent_SensorModulesUpdated=1024,
         MCPEvent_TrackerUpdated=1280,
         MCPEvent_CommandReply=1536,
-        MCPEvent_Notify=1792
+        MCPEvent_Notify=1792,
+        MCPEvent_AliceIMUUpdated=4096,
+        MCPEvent_AliceRigidbodyUpdated=4097,
+        MCPEvent_AliceTrackerUpdated=4098,
+        MCPEvent_AliceMarkerUpdated=4099
     };
     [StructLayout(LayoutKind.Sequential)]
     public struct MCPEvent_t
@@ -1668,8 +1912,8 @@ namespace MocapApi
                 var mocapApi = new Version();
                 mocapApi.major = 0;
                 mocapApi.minor = 0;
-                mocapApi.build = 11;
-                mocapApi.revision = 0xed4a7791u;
+                mocapApi.build = 15;
+                mocapApi.revision = 0xbd3bb7a6u;
                 return mocapApi;
             }
         }
@@ -1684,7 +1928,7 @@ namespace MocapApi
         {
             get
             {
-                return "0.0.11.ed4a7791"
+                return "0.0.15.bd3bb7a6";
             }
         }
         public uint major;

@@ -24,8 +24,8 @@
 
 #define MOCAP_API_VERSION_MAJOR 0
 #define MOCAP_API_VERSION_MINOR 0
-#define MOCAP_API_VERSION_BUILD 11
-#define MOCAP_API_VERSION_REVISION ed4a7791
+#define MOCAP_API_VERSION_BUILD 15
+#define MOCAP_API_VERSION_REVISION bd3bb7a6
 
 namespace MocapApi
 {
@@ -129,6 +129,7 @@ namespace MocapApi
         virtual EMCPError GetRigidBodyStatus(int * status, MCPRigidBodyHandle_t ulRigidBodyHandle) = 0;
         virtual EMCPError GetRigidBodyId(int * id, MCPRigidBodyHandle_t ulRigidBodyHandle) = 0;
         virtual EMCPError GetRigidBodyJointTag(EMCPJointTag * jointTag_, MCPRigidBodyHandle_t ulRigidBodyHandle) = 0;
+        virtual EMCPError GetRigidBodyAxisAngle(float * x, float * y, float * z, float * angle, MCPRigidBodyHandle_t ulRigidBodyHandle) = 0;
     };
     static const char * IMCPRigidBody_Version = "IMCPRigidBody_001";
     typedef uint64_t MCPTrackerHandle_t;
@@ -197,6 +198,37 @@ namespace MocapApi
         virtual EMCPError GetAvatarPostureTimeCode(uint32_t * hour, uint32_t * minute, uint32_t * second, uint32_t * frame, uint32_t * rate, MCPAvatarHandle_t ulAvatarHandle) = 0;
     };
     static const char * IMCPAvatar_Version = "IMCPAvatar_003";
+    typedef uint64_t MCPMarkerHandle_t;
+    class IMCPMarker
+    {
+    public:
+        virtual EMCPError GetMarkerPosition(float * x, float * y, float * z, MCPMarkerHandle_t handle) = 0;
+    };
+    static const char * IMCPMarker_Version = "IMCPMarker_001";
+    typedef uint64_t MCPPWRHandle_t;
+    class IMCPPWR
+    {
+    public:
+        virtual EMCPError GetPWRId(uint32_t * id, MCPPWRHandle_t handle) = 0;
+        virtual EMCPError GetPWRStatus(int * status, MCPPWRHandle_t handle) = 0;
+        virtual EMCPError GetPWRPosition(float * x, float * y, float * z, MCPPWRHandle_t handle) = 0;
+        virtual EMCPError GetPWRQuaternion(float * x, float * y, float * z, float * w, MCPPWRHandle_t handle) = 0;
+    };
+    static const char * IMCPPWR_Version = "IMCPPWR_001";
+    typedef uint64_t MCPAliceBusHandle_t;
+    class IMCPAliceHub
+    {
+    public:
+        virtual EMCPError GetSensorModuleList(MCPSensorModuleHandle_t * pHandles, uint32_t * nHandles) = 0;
+        virtual EMCPError GetSensorModuleTimestamp(uint64_t * timestamp) = 0;
+        virtual EMCPError GetMarkerList(MCPMarkerHandle_t * pHandles, uint32_t * nHandles) = 0;
+        virtual EMCPError GetMarkerTimestamp(uint64_t * timestamp) = 0;
+        virtual EMCPError GetRigidBodyList(MCPRigidBodyHandle_t * pHandles, uint32_t * nHandles) = 0;
+        virtual EMCPError GetRigidBodyTimestamp(uint64_t * timestamp) = 0;
+        virtual EMCPError GetPWRList(MCPPWRHandle_t * pHandles, uint32_t * nHandles) = 0;
+        virtual EMCPError GetPWRTimestamp(uint64_t * timestamp) = 0;
+    };
+    static const char * IMCPAliceHub_Version = "IMCPAliceHub_001";
     enum EMCPCommand
     {
         CommandStartCapture=0,
@@ -206,6 +238,15 @@ namespace MocapApi
         CommandStartRecored=4,
         CommandStopRecored=5,
         CommandResumeOriginalPosture=6
+    };
+    enum EMCPCalibrateMotionFlag
+    {
+        CalibrateMotionFlag_AutoNextStep=0,
+        CalibrateMotionFlag_ManualNextStep=1
+    };
+    enum EMCPCalibrateMotionOperation
+    {
+        CalibrateMotionOperation_Next=0
     };
     enum EMCPCommandStopCatpureExtraFlag
     {
@@ -289,6 +330,14 @@ namespace MocapApi
     {
         MCPTrackerHandle_t _trackerHandle;
     };
+    struct MCPEvent_MarkerData_t
+    {
+        MCPMarkerHandle_t _markerHandle;
+    };
+    struct MCPEvent_PWRData_t
+    {
+        MCPPWRHandle_t _pwrHandle;
+    };
     enum EMCPNotify
     {
         Notify_RecordStarted=0,
@@ -319,6 +368,8 @@ namespace MocapApi
         MCPEvent_SensorModuleData_t sensorModuleData;
         MCPEvent_TrackerData_t trackerData;
         MCPEvent_CommandRespond_t commandRespond;
+        MCPEvent_MarkerData_t markerData;
+        MCPEvent_PWRData_t pwrData;
         MCPEvent_NotifyData_t notifyData;
     };
     enum EMCPEventType
@@ -330,7 +381,11 @@ namespace MocapApi
         MCPEvent_SensorModulesUpdated=1024,
         MCPEvent_TrackerUpdated=1280,
         MCPEvent_CommandReply=1536,
-        MCPEvent_Notify=1792
+        MCPEvent_Notify=1792,
+        MCPEvent_AliceIMUUpdated=4096,
+        MCPEvent_AliceRigidbodyUpdated=4097,
+        MCPEvent_AliceTrackerUpdated=4098,
+        MCPEvent_AliceMarkerUpdated=4099
     };
     struct MCPEvent_t
     {
