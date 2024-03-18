@@ -21,8 +21,8 @@
 
 #define MOCAP_API_VERSION_MAJOR 0
 #define MOCAP_API_VERSION_MINOR 0
-#define MOCAP_API_VERSION_BUILD 15
-#define MOCAP_API_VERSION_REVISION bd3bb7a6
+#define MOCAP_API_VERSION_BUILD 16
+#define MOCAP_API_VERSION_REVISION c304fc96
 
 enum EMCPError
 {
@@ -143,8 +143,10 @@ struct MCPSensorModule_ProcTable {
     EMCPError (MCP_PROC_TABLE_CALLTYPE * GetSensorModuleId) (uint32_t * id, MCPSensorModuleHandle_t sensorModuleHandle);
     EMCPError (MCP_PROC_TABLE_CALLTYPE * GetSensorModuleCompassValue) (float * x, float * y, float * z, MCPSensorModuleHandle_t sensorModuleHandle);
     EMCPError (MCP_PROC_TABLE_CALLTYPE * GetSensorModuleTemperature) (float * temperature, MCPSensorModuleHandle_t sensorModuleHandle);
+    EMCPError (MCP_PROC_TABLE_CALLTYPE * GetSensorModulePostureTimeCode) (uint32_t * hour, uint32_t * minute, uint32_t * second, uint32_t * frame, uint32_t * rate, MCPSensorModuleHandle_t sensorModuleHandle);
+    EMCPError (MCP_PROC_TABLE_CALLTYPE * GetSensorModulePostureTime) (uint32_t * hour, uint32_t * minute, uint32_t * second, uint32_t * millisecond, MCPSensorModuleHandle_t sensorModuleHandle);
 };
-static const char * IMCPSensorModule_Version = "PROC_TABLE:IMCPSensorModule_001";
+static const char * IMCPSensorModule_Version = "PROC_TABLE:IMCPSensorModule_002";
 typedef uint64_t MCPBodyPartHandle_t;
 struct MCPBodyPart_ProcTable {
     EMCPError (MCP_PROC_TABLE_CALLTYPE * GetJointPosition) (float * x, float * y, float * z, MCPBodyPartHandle_t bodyPartHandle);
@@ -179,8 +181,9 @@ struct MCPAvatar_ProcTable {
     EMCPError (MCP_PROC_TABLE_CALLTYPE * GetAvatarJointHierarchy) (const char ** ppStr);
     EMCPError (MCP_PROC_TABLE_CALLTYPE * GetAvatarPostureIndex) (uint32_t * postureIndex, MCPAvatarHandle_t ulAvatarHandle);
     EMCPError (MCP_PROC_TABLE_CALLTYPE * GetAvatarPostureTimeCode) (uint32_t * hour, uint32_t * minute, uint32_t * second, uint32_t * frame, uint32_t * rate, MCPAvatarHandle_t ulAvatarHandle);
+    EMCPError (MCP_PROC_TABLE_CALLTYPE * GetAvatarPostureTime) (uint32_t * hour, uint32_t * minute, uint32_t * second, uint32_t * millisecond, MCPAvatarHandle_t ulAvatarHandle);
 };
-static const char * IMCPAvatar_Version = "PROC_TABLE:IMCPAvatar_003";
+static const char * IMCPAvatar_Version = "PROC_TABLE:IMCPAvatar_004";
 typedef uint64_t MCPMarkerHandle_t;
 struct MCPMarker_ProcTable {
     EMCPError (MCP_PROC_TABLE_CALLTYPE * GetMarkerPosition) (float * x, float * y, float * z, MCPMarkerHandle_t handle);
@@ -223,7 +226,8 @@ enum EMCPCalibrateMotionFlag
 };
 enum EMCPCalibrateMotionOperation
 {
-    CalibrateMotionOperation_Next=0
+    CalibrateMotionOperation_Next=0,
+    CalibrateMotionOperation_Cancel=1
 };
 enum EMCPCommandStopCatpureExtraFlag
 {
@@ -451,6 +455,7 @@ struct MCPRenderSettings_ProcTable {
     EMCPError (MCP_PROC_TABLE_CALLTYPE * DestroyRenderSettings) (MCPRenderSettingsHandle_t renderSettings);
 };
 static const char * IMCPRenderSettings_Version = "PROC_TABLE:IMCPRenderSettings_001";
+typedef void ( * MCPEventHandleProc ) ( const MCPEvent_t * ev , void * custom );
 typedef uint64_t MCPApplicationHandle_t;
 struct MCPApplication_ProcTable {
     EMCPError (MCP_PROC_TABLE_CALLTYPE * CreateApplication) (MCPApplicationHandle_t * ulApplicationHandle);
@@ -468,8 +473,10 @@ struct MCPApplication_ProcTable {
     EMCPError (MCP_PROC_TABLE_CALLTYPE * GetApplicationSensorModules) (MCPSensorModuleHandle_t * pSensorModuleHandle, uint32_t * punSensorModuleHandle, MCPApplicationHandle_t ulApplicationHandle);
     EMCPError (MCP_PROC_TABLE_CALLTYPE * GetApplicationTrackers) (MCPTrackerHandle_t * pTrackerHandle, uint32_t * punTrackerHandle, MCPApplicationHandle_t ulApplicationHandle);
     EMCPError (MCP_PROC_TABLE_CALLTYPE * QueuedServerCommand) (MCPCommandHandle_t cmdHandle, MCPApplicationHandle_t ulApplicationHandle);
+    EMCPError (MCP_PROC_TABLE_CALLTYPE * RegisterEventHandler) (MCPEventHandleProc eventHandleProc, intptr_t userData, MCPApplicationHandle_t ulApplicationHandle);
+    EMCPError (MCP_PROC_TABLE_CALLTYPE * UnregisterEventHandler) (MCPEventHandleProc eventHandleProc, intptr_t * userData, MCPApplicationHandle_t ulApplicationHandle);
 };
-static const char * IMCPApplication_Version = "PROC_TABLE:IMCPApplication_002";
+static const char * IMCPApplication_Version = "PROC_TABLE:IMCPApplication_004";
 typedef uint64_t MCPRecordNotifyHandle_t;
 struct MCPRecordNotify_ProcTable {
     EMCPError (MCP_PROC_TABLE_CALLTYPE * DuplicateRecordNotify) (MCPRecordNotifyHandle_t * duplicatedRecordNotifyHandle, MCPRecordNotifyHandle_t recordNotifyHandle);

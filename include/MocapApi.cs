@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 #if UNITY_5_3_OR_NEWER
     using UnityEngine;
@@ -177,6 +178,7 @@ namespace MocapApi
         private MCPRigidBody_ProcTable ProcTable;
         private static IMCPRigidBody rigidBody;
         private const string IMCPRigidBody_Version = "IMCPRigidBody_001";
+        private List<MCPEventHandleProc> eventHandleProcList = new List<MCPEventHandleProc>();
         private IMCPRigidBody()
         {
             IntPtr pp = IntPtr.Zero;
@@ -268,6 +270,7 @@ namespace MocapApi
         private MCPTracker_ProcTable ProcTable;
         private static IMCPTracker tracker;
         private const string IMCPTracker_Version = "IMCPTracker_001";
+        private List<MCPEventHandleProc> eventHandleProcList = new List<MCPEventHandleProc>();
         private IMCPTracker()
         {
             IntPtr pp = IntPtr.Zero;
@@ -316,6 +319,14 @@ namespace MocapApi
         {
             return ProcTable.GetSensorModuleTemperature(ref temperature, sensorModuleHandle);
         }
+        public EMCPError GetSensorModulePostureTimeCode(ref uint hour, ref uint minute, ref uint second, ref uint frame, ref uint rate, ulong sensorModuleHandle)
+        {
+            return ProcTable.GetSensorModulePostureTimeCode(ref hour, ref minute, ref second, ref frame, ref rate, sensorModuleHandle);
+        }
+        public EMCPError GetSensorModulePostureTime(ref uint hour, ref uint minute, [In, Out]uint[] second, ref uint millisecond, ulong sensorModuleHandle)
+        {
+            return ProcTable.GetSensorModulePostureTime(ref hour, ref minute, second, ref millisecond, sensorModuleHandle);
+        }
         [StructLayout(LayoutKind.Sequential)]
         private struct MCPSensorModule_ProcTable
         {
@@ -349,10 +360,21 @@ namespace MocapApi
             [MarshalAs(UnmanagedType.FunctionPtr)]
             internal _GetSensorModuleTemperature GetSensorModuleTemperature;
 
+            [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+            internal delegate EMCPError _GetSensorModulePostureTimeCode(ref uint hour, ref uint minute, ref uint second, ref uint frame, ref uint rate, ulong sensorModuleHandle);
+            [MarshalAs(UnmanagedType.FunctionPtr)]
+            internal _GetSensorModulePostureTimeCode GetSensorModulePostureTimeCode;
+
+            [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+            internal delegate EMCPError _GetSensorModulePostureTime(ref uint hour, ref uint minute, [In, Out]uint[] second, ref uint millisecond, ulong sensorModuleHandle);
+            [MarshalAs(UnmanagedType.FunctionPtr)]
+            internal _GetSensorModulePostureTime GetSensorModulePostureTime;
+
         };
         private MCPSensorModule_ProcTable ProcTable;
         private static IMCPSensorModule sensorModule;
-        private const string IMCPSensorModule_Version = "IMCPSensorModule_001";
+        private const string IMCPSensorModule_Version = "IMCPSensorModule_002";
+        private List<MCPEventHandleProc> eventHandleProcList = new List<MCPEventHandleProc>();
         private IMCPSensorModule()
         {
             IntPtr pp = IntPtr.Zero;
@@ -411,6 +433,7 @@ namespace MocapApi
         private MCPBodyPart_ProcTable ProcTable;
         private static IMCPBodyPart bodyPart;
         private const string IMCPBodyPart_Version = "IMCPBodyPart_001";
+        private List<MCPEventHandleProc> eventHandleProcList = new List<MCPEventHandleProc>();
         private IMCPBodyPart()
         {
             IntPtr pp = IntPtr.Zero;
@@ -562,6 +585,7 @@ namespace MocapApi
         private MCPJoint_ProcTable ProcTable;
         private static IMCPJoint joint;
         private const string IMCPJoint_Version = "IMCPJoint_003";
+        private List<MCPEventHandleProc> eventHandleProcList = new List<MCPEventHandleProc>();
         private IMCPJoint()
         {
             IntPtr pp = IntPtr.Zero;
@@ -634,6 +658,10 @@ namespace MocapApi
         {
             return ProcTable.GetAvatarPostureTimeCode(ref hour, ref minute, ref second, ref frame, ref rate, ulAvatarHandle);
         }
+        public EMCPError GetAvatarPostureTime(ref uint hour, ref uint minute, [In, Out]uint[] second, ref uint millisecond, ulong ulAvatarHandle)
+        {
+            return ProcTable.GetAvatarPostureTime(ref hour, ref minute, second, ref millisecond, ulAvatarHandle);
+        }
         [StructLayout(LayoutKind.Sequential)]
         private struct MCPAvatar_ProcTable
         {
@@ -682,10 +710,16 @@ namespace MocapApi
             [MarshalAs(UnmanagedType.FunctionPtr)]
             internal _GetAvatarPostureTimeCode GetAvatarPostureTimeCode;
 
+            [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+            internal delegate EMCPError _GetAvatarPostureTime(ref uint hour, ref uint minute, [In, Out]uint[] second, ref uint millisecond, ulong ulAvatarHandle);
+            [MarshalAs(UnmanagedType.FunctionPtr)]
+            internal _GetAvatarPostureTime GetAvatarPostureTime;
+
         };
         private MCPAvatar_ProcTable ProcTable;
         private static IMCPAvatar avatar;
-        private const string IMCPAvatar_Version = "IMCPAvatar_003";
+        private const string IMCPAvatar_Version = "IMCPAvatar_004";
+        private List<MCPEventHandleProc> eventHandleProcList = new List<MCPEventHandleProc>();
         private IMCPAvatar()
         {
             IntPtr pp = IntPtr.Zero;
@@ -726,6 +760,7 @@ namespace MocapApi
         private MCPMarker_ProcTable ProcTable;
         private static IMCPMarker marker;
         private const string IMCPMarker_Version = "IMCPMarker_001";
+        private List<MCPEventHandleProc> eventHandleProcList = new List<MCPEventHandleProc>();
         private IMCPMarker()
         {
             IntPtr pp = IntPtr.Zero;
@@ -793,6 +828,7 @@ namespace MocapApi
         private MCPPWR_ProcTable ProcTable;
         private static IMCPPWR pWR;
         private const string IMCPPWR_Version = "IMCPPWR_001";
+        private List<MCPEventHandleProc> eventHandleProcList = new List<MCPEventHandleProc>();
         private IMCPPWR()
         {
             IntPtr pp = IntPtr.Zero;
@@ -896,6 +932,7 @@ namespace MocapApi
         private MCPAliceHub_ProcTable ProcTable;
         private static IMCPAliceHub aliceHub;
         private const string IMCPAliceHub_Version = "IMCPAliceHub_001";
+        private List<MCPEventHandleProc> eventHandleProcList = new List<MCPEventHandleProc>();
         private IMCPAliceHub()
         {
             IntPtr pp = IntPtr.Zero;
@@ -924,7 +961,8 @@ namespace MocapApi
     };
     public enum EMCPCalibrateMotionOperation
     {
-        CalibrateMotionOperation_Next=0
+        CalibrateMotionOperation_Next=0,
+        CalibrateMotionOperation_Cancel=1
     };
     public enum EMCPCommandStopCatpureExtraFlag
     {
@@ -1084,6 +1122,7 @@ namespace MocapApi
         private MCPCommand_ProcTable ProcTable;
         private static IMCPCommand command;
         private const string IMCPCommand_Version = "IMCPCommand_002";
+        private List<MCPEventHandleProc> eventHandleProcList = new List<MCPEventHandleProc>();
         private IMCPCommand()
         {
             IntPtr pp = IntPtr.Zero;
@@ -1193,6 +1232,7 @@ namespace MocapApi
         private MCPCalibrateMotionProgress_ProcTable ProcTable;
         private static IMCPCalibrateMotionProgress calibrateMotionProgress;
         private const string IMCPCalibrateMotionProgress_Version = "IMCPCalibrateMotionProgress_001";
+        private List<MCPEventHandleProc> eventHandleProcList = new List<MCPEventHandleProc>();
         private IMCPCalibrateMotionProgress()
         {
             IntPtr pp = IntPtr.Zero;
@@ -1427,6 +1467,7 @@ namespace MocapApi
         private MCPSettings_ProcTable ProcTable;
         private static IMCPSettings settings;
         private const string IMCPSettings_Version = "IMCPSettings_001";
+        private List<MCPEventHandleProc> eventHandleProcList = new List<MCPEventHandleProc>();
         private IMCPSettings()
         {
             IntPtr pp = IntPtr.Zero;
@@ -1608,6 +1649,7 @@ namespace MocapApi
         private MCPRenderSettings_ProcTable ProcTable;
         private static IMCPRenderSettings renderSettings;
         private const string IMCPRenderSettings_Version = "IMCPRenderSettings_001";
+        private List<MCPEventHandleProc> eventHandleProcList = new List<MCPEventHandleProc>();
         private IMCPRenderSettings()
         {
             IntPtr pp = IntPtr.Zero;
@@ -1619,6 +1661,7 @@ namespace MocapApi
             ProcTable = (MCPRenderSettings_ProcTable)Marshal.PtrToStructure(pp, typeof(MCPRenderSettings_ProcTable));
         }
     };
+    public delegate void MCPEventHandleProc(MCPEvent_t ev);
     public class IMCPApplication
     {
         static public IMCPApplication Application
@@ -1692,6 +1735,59 @@ namespace MocapApi
         {
             return ProcTable.QueuedServerCommand(cmdHandle, ulApplicationHandle);
         }
+        public EMCPError RegisterEventHandler(MCPEventHandleProc eventHandleProc, ulong ulApplicationHandle)
+        {
+            lock (eventHandleProcList)
+            {
+                eventHandleProcList.Add(eventHandleProc);
+            }
+            if (eventHandleProcList.Count == 1)
+            {
+                var handle = GCHandle.Alloc(this, GCHandleType.Pinned);
+                return ProcTable.RegisterEventHandler(mcpEventHandleProc, GCHandle.ToIntPtr(handle), ulApplicationHandle);
+            }
+            else
+            {
+                return EMCPError.Error_None;
+            }
+        }
+        public EMCPError UnregisterEventHandler(MCPEventHandleProc eventHandleProc, ulong ulApplicationHandle)
+        {
+            lock (eventHandleProcList)
+            {
+                eventHandleProcList.Remove(eventHandleProc);
+            }
+            if (eventHandleProcList.Count > 0)
+            {
+                return EMCPError.Error_None;
+            }
+            else
+            {
+                IntPtr userData = new IntPtr();
+                var r = ProcTable.UnregisterEventHandler(mcpEventHandleProc, ref userData, ulApplicationHandle);
+                if (r == EMCPError.Error_None)
+                {
+                    GCHandle.FromIntPtr(userData).Free();
+                }
+                return r;
+            }
+        }
+        internal static void mcpEventHandleProc(IntPtr ev, IntPtr userData)
+        {
+            var self_ = (IMCPApplication)GCHandle.FromIntPtr(userData).Target;
+            var eve = Marshal.PtrToStructure<MCPEvent_t>(ev);
+            lock (self_.eventHandleProcList)
+            {
+                foreach (var e in self_.eventHandleProcList)
+                {
+                    e(eve);
+                }
+            }
+        }
+
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        internal delegate void _MCPEventHandleProc(IntPtr ev, IntPtr userData);
+
         [StructLayout(LayoutKind.Sequential)]
         private struct MCPApplication_ProcTable
         {
@@ -1770,10 +1866,21 @@ namespace MocapApi
             [MarshalAs(UnmanagedType.FunctionPtr)]
             internal _QueuedServerCommand QueuedServerCommand;
 
+            [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+            internal delegate EMCPError _RegisterEventHandler(_MCPEventHandleProc eventHandleProc, IntPtr userData, ulong ulApplicationHandle);
+            [MarshalAs(UnmanagedType.FunctionPtr)]
+            internal _RegisterEventHandler RegisterEventHandler;
+
+            [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+            internal delegate EMCPError _UnregisterEventHandler(_MCPEventHandleProc eventHandleProc, ref IntPtr userData, ulong ulApplicationHandle);
+            [MarshalAs(UnmanagedType.FunctionPtr)]
+            internal _UnregisterEventHandler UnregisterEventHandler;
+
         };
         private MCPApplication_ProcTable ProcTable;
         private static IMCPApplication application;
-        private const string IMCPApplication_Version = "IMCPApplication_002";
+        private const string IMCPApplication_Version = "IMCPApplication_004";
+        private List<MCPEventHandleProc> eventHandleProcList = new List<MCPEventHandleProc>();
         private IMCPApplication()
         {
             IntPtr pp = IntPtr.Zero;
@@ -1883,6 +1990,7 @@ namespace MocapApi
         private MCPRecordNotify_ProcTable ProcTable;
         private static IMCPRecordNotify recordNotify;
         private const string IMCPRecordNotify_Version = "IMCPRecordNotify_001";
+        private List<MCPEventHandleProc> eventHandleProcList = new List<MCPEventHandleProc>();
         private IMCPRecordNotify()
         {
             IntPtr pp = IntPtr.Zero;
@@ -1912,8 +2020,8 @@ namespace MocapApi
                 var mocapApi = new Version();
                 mocapApi.major = 0;
                 mocapApi.minor = 0;
-                mocapApi.build = 15;
-                mocapApi.revision = 0xbd3bb7a6u;
+                mocapApi.build = 16;
+                mocapApi.revision = 0xc304fc96u;
                 return mocapApi;
             }
         }
@@ -1928,7 +2036,7 @@ namespace MocapApi
         {
             get
             {
-                return "0.0.15.bd3bb7a6";
+                return "0.0.16.c304fc96";
             }
         }
         public uint major;
