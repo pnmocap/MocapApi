@@ -21,8 +21,8 @@
 
 #define MOCAP_API_VERSION_MAJOR 0
 #define MOCAP_API_VERSION_MINOR 0
-#define MOCAP_API_VERSION_BUILD 16
-#define MOCAP_API_VERSION_REVISION c304fc96
+#define MOCAP_API_VERSION_BUILD 17
+#define MOCAP_API_VERSION_REVISION a6e15748
 
 enum EMCPError
 {
@@ -154,6 +154,11 @@ struct MCPBodyPart_ProcTable {
     EMCPError (MCP_PROC_TABLE_CALLTYPE * GetBodyPartPosture) (float * x, float * y, float * z, float * w, MCPBodyPartHandle_t bodyPartHandle);
 };
 static const char * IMCPBodyPart_Version = "PROC_TABLE:IMCPBodyPart_001";
+enum EMCPGroundingState
+{
+    GroundingState_Grounding=0,
+    GroundingState_Flying=1
+};
 typedef uint64_t MCPJointHandle_t;
 struct MCPJoint_ProcTable {
     EMCPError (MCP_PROC_TABLE_CALLTYPE * GetJointName) (const char ** ppStr, MCPJointHandle_t ulJointHandle);
@@ -168,8 +173,10 @@ struct MCPJoint_ProcTable {
     EMCPError (MCP_PROC_TABLE_CALLTYPE * GetJointNameByTag) (const char ** ppStr, EMCPJointTag jointTag);
     EMCPError (MCP_PROC_TABLE_CALLTYPE * GetJointChildJointTag) (EMCPJointTag * pJointTag, uint32_t * punSizeOfJointTag, EMCPJointTag jointTag);
     EMCPError (MCP_PROC_TABLE_CALLTYPE * GetJointParentJointTag) (EMCPJointTag * pJointTag, EMCPJointTag jointTag);
+    EMCPError (MCP_PROC_TABLE_CALLTYPE * GetJointGroundingState) (EMCPGroundingState * pGroundingState, MCPJointHandle_t ulJointHandle);
+    EMCPError (MCP_PROC_TABLE_CALLTYPE * GetJointGroundablePoints) (float * pointsPostion, uint32_t * numberOfPoints, uint32_t * plowest_index, MCPJointHandle_t ulJointHandle);
 };
-static const char * IMCPJoint_Version = "PROC_TABLE:IMCPJoint_003";
+static const char * IMCPJoint_Version = "PROC_TABLE:IMCPJoint_004";
 typedef uint64_t MCPAvatarHandle_t;
 struct MCPAvatar_ProcTable {
     EMCPError (MCP_PROC_TABLE_CALLTYPE * GetAvatarIndex) (uint32_t * index, MCPAvatarHandle_t ulAvatarHandle);
@@ -487,8 +494,5 @@ struct MCPRecordNotify_ProcTable {
     EMCPError (MCP_PROC_TABLE_CALLTYPE * DestroyRecordNotify) (MCPRecordNotifyHandle_t recordNotifyHandle);
 };
 static const char * IMCPRecordNotify_Version = "PROC_TABLE:IMCPRecordNotify_001";
-MCP_PROC_TABLE_API EMCPError MCP_PROC_TABLE_CALLTYPE MCPGetGenericInterface(const char * pchInterfaceVersion, void ** ppInterface);
-MCP_PROC_TABLE_API void MCP_PROC_TABLE_CALLTYPE MCPGetMocapApiVersion(uint32_t * major, uint32_t * minor, uint32_t * build, uint32_t * revision);
-MCP_PROC_TABLE_API const char * MCP_PROC_TABLE_CALLTYPE MCPGetMocapApiVersionString();
 
 #endif /* END OF _NOITOM_CMOCAPAPI_H */

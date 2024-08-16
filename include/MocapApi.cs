@@ -445,6 +445,11 @@ namespace MocapApi
             ProcTable = (MCPBodyPart_ProcTable)Marshal.PtrToStructure(pp, typeof(MCPBodyPart_ProcTable));
         }
     };
+    public enum EMCPGroundingState
+    {
+        GroundingState_Grounding=0,
+        GroundingState_Flying=1
+    };
     public class IMCPJoint
     {
         static public IMCPJoint Joint
@@ -518,6 +523,14 @@ namespace MocapApi
         {
             return ProcTable.GetJointParentJointTag(ref pJointTag, jointTag);
         }
+        public EMCPError GetJointGroundingState(ref EMCPGroundingState pGroundingState, ulong ulJointHandle)
+        {
+            return ProcTable.GetJointGroundingState(ref pGroundingState, ulJointHandle);
+        }
+        public EMCPError GetJointGroundablePoints(ref float pointsPostion, ref uint numberOfPoints, ref uint plowest_index, ulong ulJointHandle)
+        {
+            return ProcTable.GetJointGroundablePoints(ref pointsPostion, ref numberOfPoints, ref plowest_index, ulJointHandle);
+        }
         [StructLayout(LayoutKind.Sequential)]
         private struct MCPJoint_ProcTable
         {
@@ -581,10 +594,20 @@ namespace MocapApi
             [MarshalAs(UnmanagedType.FunctionPtr)]
             internal _GetJointParentJointTag GetJointParentJointTag;
 
+            [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+            internal delegate EMCPError _GetJointGroundingState(ref EMCPGroundingState pGroundingState, ulong ulJointHandle);
+            [MarshalAs(UnmanagedType.FunctionPtr)]
+            internal _GetJointGroundingState GetJointGroundingState;
+
+            [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+            internal delegate EMCPError _GetJointGroundablePoints(ref float pointsPostion, ref uint numberOfPoints, ref uint plowest_index, ulong ulJointHandle);
+            [MarshalAs(UnmanagedType.FunctionPtr)]
+            internal _GetJointGroundablePoints GetJointGroundablePoints;
+
         };
         private MCPJoint_ProcTable ProcTable;
         private static IMCPJoint joint;
-        private const string IMCPJoint_Version = "IMCPJoint_003";
+        private const string IMCPJoint_Version = "IMCPJoint_004";
         private List<MCPEventHandleProc> eventHandleProcList = new List<MCPEventHandleProc>();
         private IMCPJoint()
         {
@@ -2020,8 +2043,8 @@ namespace MocapApi
                 var mocapApi = new Version();
                 mocapApi.major = 0;
                 mocapApi.minor = 0;
-                mocapApi.build = 16;
-                mocapApi.revision = 0xc304fc96u;
+                mocapApi.build = 17;
+                mocapApi.revision = 0xa6e15748u;
                 return mocapApi;
             }
         }
@@ -2036,7 +2059,7 @@ namespace MocapApi
         {
             get
             {
-                return "0.0.16.c304fc96";
+                return "0.0.17.a6e15748";
             }
         }
         public uint major;
@@ -2064,23 +2087,23 @@ namespace MocapApi
     }
     internal class Interop
     {
-# if UNITY_IOS
+    # if UNITY_IOS
         [DllImportAttribute("__Internal", EntryPoint="MCPGetMocapApiVersionString",CallingConvention=CallingConvention.Cdecl)]
-# else
+    # else
         [DllImportAttribute("MocapApi", EntryPoint="MCPGetMocapApiVersionString",CallingConvention=CallingConvention.Cdecl)]
-# endif
+    # endif
         internal static extern IntPtr MCPGetMocapApiVersionString();
-# if UNITY_IOS
+    # if UNITY_IOS
         [DllImportAttribute("__Internal", EntryPoint="MCPGetMocapApiVersion",CallingConvention=CallingConvention.Cdecl)]
-# else
+    # else
         [DllImportAttribute("MocapApi", EntryPoint="MCPGetMocapApiVersion",CallingConvention=CallingConvention.Cdecl)]
-# endif
+    # endif
         internal static extern void MCPGetMocapApiVersion(ref uint major, ref uint minor, ref uint build, ref uint revision);
-# if UNITY_IOS
+    # if UNITY_IOS
         [DllImportAttribute("__Internal", EntryPoint="MCPGetGenericInterface",CallingConvention=CallingConvention.Cdecl)]
-# else
+    # else
         [DllImportAttribute("MocapApi", EntryPoint="MCPGetGenericInterface",CallingConvention=CallingConvention.Cdecl)]
-# endif
+    # endif
         internal static extern EMCPError MCPGetGenericInterface([In, MarshalAs(UnmanagedType.LPStr)] string pchInterfaceVersion, ref IntPtr ppInterface);
         internal const string ProcTable_Prefix = "PROC_TABLE:";
     };

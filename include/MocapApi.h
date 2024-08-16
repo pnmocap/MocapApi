@@ -24,8 +24,8 @@
 
 #define MOCAP_API_VERSION_MAJOR 0
 #define MOCAP_API_VERSION_MINOR 0
-#define MOCAP_API_VERSION_BUILD 16
-#define MOCAP_API_VERSION_REVISION c304fc96
+#define MOCAP_API_VERSION_BUILD 17
+#define MOCAP_API_VERSION_REVISION a6e15748
 
 namespace MocapApi
 {
@@ -167,6 +167,11 @@ namespace MocapApi
         virtual EMCPError GetBodyPartPosture(float * x, float * y, float * z, float * w, MCPBodyPartHandle_t bodyPartHandle) = 0;
     };
     static const char * IMCPBodyPart_Version = "IMCPBodyPart_001";
+    enum EMCPGroundingState
+    {
+        GroundingState_Grounding=0,
+        GroundingState_Flying=1
+    };
     typedef uint64_t MCPJointHandle_t;
     class IMCPJoint
     {
@@ -183,8 +188,10 @@ namespace MocapApi
         virtual EMCPError GetJointNameByTag(const char ** ppStr, EMCPJointTag jointTag) = 0;
         virtual EMCPError GetJointChildJointTag(EMCPJointTag * pJointTag, uint32_t * punSizeOfJointTag, EMCPJointTag jointTag) = 0;
         virtual EMCPError GetJointParentJointTag(EMCPJointTag * pJointTag, EMCPJointTag jointTag) = 0;
+        virtual EMCPError GetJointGroundingState(EMCPGroundingState * pGroundingState, MCPJointHandle_t ulJointHandle) = 0;
+        virtual EMCPError GetJointGroundablePoints(float * pointsPostion, uint32_t * numberOfPoints, uint32_t * plowest_index, MCPJointHandle_t ulJointHandle) = 0;
     };
-    static const char * IMCPJoint_Version = "IMCPJoint_003";
+    static const char * IMCPJoint_Version = "IMCPJoint_004";
     typedef uint64_t MCPAvatarHandle_t;
     class IMCPAvatar
     {
