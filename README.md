@@ -2,7 +2,7 @@
 MocapApi for Axis Studio of Noitom
 
 ## Document
-English Documentation : https://documentation.neuronmocap.com/mocapapi-v1/Default.htm
+English Documentation : https://mocap-api.noitom.com/mocap_api_en.html
 
 
 ## Run Demo
