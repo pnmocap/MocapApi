@@ -1,0 +1,13 @@
+setup.py
+mocap_api/__init__.py
+mocap_api/mocap_api.py
+mocap_api.egg-info/PKG-INFO
+mocap_api.egg-info/SOURCES.txt
+mocap_api.egg-info/dependency_links.txt
+mocap_api.egg-info/top_level.txt
+mocap_api/include/MocapApi/MocapApi.h
+mocap_api/include/MocapApi/MocapCApi.h
+mocap_api/lib/amd64/MocapApi.dll
+mocap_api/lib/amd64/MocapApi.lib
+mocap_api/lib/arm64/libMocapApi.so
+mocap_api/lib/x86_64/libMocapApi.so

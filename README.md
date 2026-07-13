@@ -40,7 +40,7 @@ raw sensor readings and system events every frame.
 | C++      | `include/MocapApi.h`                         | Uses the `IMCPXxx` virtual interfaces.                                   |
 | C        | `include/MocapCApi.h`                        | Uses the matching `MCPXxx_ProcTable` function-pointer structs.           |
 | C#       | `include/MocapApi.cs`                        | Calls `IMCPXxx.Xxx()` static/instance methods directly; no handle types. |
-| Python   | *(separate package, maintained by the team)* | Pythonic wrapper over the native library.                                |
+| Python   | [`demo/demo-py`](demo/demo-py)               | Python wrapper and sample over the native library.                       |
 
 Engines: **Unity3D** and **Unreal Engine** (see [`demo/`](demo)).
 
