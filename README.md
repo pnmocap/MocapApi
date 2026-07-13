@@ -207,7 +207,7 @@ The sensors output raw IMU data. Converting that into usable joint angles requir
 
 ### Axis Studio — The Software Bridge
 
-[Axis Studio]([https://en.noitom.com.cn/axis-studio.html](https://cdn.noitom.com/download/Axis%20Studio%203%20(Anti-Mag)/Axis_Studio_nacs_x64_3_0_14004_2620_20251222173616363.msi)) is Noitom's professional motion capture software. It is the critical link between the hardware sensors and MocapApi.
+[Axis Studio](https://cdn.noitom.com/download/Axis%20Studio%203%20(Anti-Mag)/Axis_Studio_nacs_x64_3_0_14004_2620_20251222173616363.msi) is Noitom's professional motion capture software. It is the critical link between the hardware sensors and MocapApi.
 
 #### What Axis Studio does
 
@@ -226,7 +226,7 @@ The sensors output raw IMU data. Converting that into usable joint angles requir
 | GPU       | NVIDIA/AMD with 2 GB+ VRAM, OpenGL 4.4+    |
 | USB       | at least 1× USB 3.0 port (for transceiver) |
 
-> For software download, installation, activation, and configuration instructions, visit [support.noitom.com]([https://support.noitom.com](https://support.noitom.com.cn/s/customer-manual-en/doc/1-software-installation-and-activation-yC49l3MCA2)).
+> For software download, installation, activation, and configuration instructions, visit [support.noitom.com](https://support.noitom.com.cn/s/customer-manual-en/doc/1-software-installation-and-activation-yC49l3MCA2).
 
 ---
 
