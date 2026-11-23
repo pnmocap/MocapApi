@@ -1,0 +1,47 @@
+PN Link Visualizer 0.8.0 motion recording format
+
+Extension: .mocap; interrupted streaming recordings can remain .mocap.partial.
+All numeric fields are little-endian. Strings use an int32 byte length and UTF-8 bytes.
+This is a private display-pose format, not a standard motion interchange format.
+It stores received skeletal results, not raw sensor samples or Nclib replay inputs.
+
+Common header:
+  8 bytes signature: "NVPOSE1\n" (r7), or "NVPOSE2\n" (0.8.0; historical internal r8)
+  int32 boneCount (1..2048)
+  boneCount strings: relative transform paths; empty path means the model root
+
+NVPOSE1 frame (fixed stride):
+  float64 seconds since first received frame; strictly increasing
+  boneCount * (float32 localPosition[3], float32 localQuaternion[4] in xyzw order)
+
+NVPOSE2 frame (variable stride):
+  same timestamp and bone pose block as NVPOSE1
+  int32 snapshotByteLength (0..262144)
+  snapshotByteLength bytes of device snapshot, if present
+  A length of zero carries forward the last snapshot within this recording only.
+  A recording with no snapshots does not borrow current live device information.
+
+Device snapshot version 1:
+  int32 version = 1
+  uint8 available, uint8 deviceOnline, uint8 recentMotion
+  string deviceSerial, string deviceFirmware
+  int32 sensorCount (0..512)
+  for each sensor:
+    uint32 ID
+    string boneAPIName, string serial, string firmware
+    float32 packetReceptionPercent (-1 means unavailable)
+    int32 magneticEnvironment: -1 unknown, 0 worst, 1 worse, 2 bad, 3 good
+
+Timing and playback:
+  Timestamps represent local reception, not source-device clock time.
+  Frames are recorded on SDK avatar-update events, not on a synthetic fixed timer.
+  Status snapshots are sampled at most once per second when motion frames arrive.
+  Playback seeks to the last complete frame at or before the requested time.
+  Device details are the snapshot associated with that frame, never a live SDK query.
+  Dropped network frames cannot be reconstructed by the recording.
+
+Recovery and validation:
+  Incomplete trailing frame data is ignored; malformed complete data is rejected.
+  Bone paths, finite values, quaternion norms, monotonic times, snapshot lengths and
+  sensor counts are checked before loading. No native handles are serialized.
+  0.8.0 reads both versions; the historical internal r7 only reads NVPOSE1.

@@ -1,0 +1,22 @@
+{
+  "product": "PN Link Visualizer",
+  "version": "0.8.0",
+  "build": 1,
+  "stage": "preview",
+  "tag": "pnlink-visualizer-v0.8.0",
+  "unity": "6000.0.31f1",
+  "sdk": {
+    "version": "0.0.70.49068d72",
+    "binding": "Assets/Scripts/MocapApi.cs",
+    "windows_x64": "Assets/Plugins/MocapApi.dll",
+    "binding_sha256": "6576d62f98da10ad9ba102f5a94c2e26edf2c7d5154623423d7bdd7eede510a4",
+    "windows_x64_sha256": "06d0599194c953fab0929bd51ce78db2bc0cf81798284e4b07c7663f6e14dffe"
+  },
+  "recording": {
+    "write": "NVPOSE2",
+    "read": [
+      "NVPOSE1",
+      "NVPOSE2"
+    ]
+  }
+}
