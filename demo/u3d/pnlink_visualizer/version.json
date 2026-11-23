@@ -1,9 +1,9 @@
 {
   "product": "PN Link Visualizer",
-  "version": "0.8.0",
-  "build": 1,
+  "version": "0.8.1",
+  "build": 2,
   "stage": "preview",
-  "tag": "pnlink-visualizer-v0.8.0",
+  "tag": "pnlink-visualizer-v0.8.1",
   "unity": "6000.0.31f1",
   "sdk": {
     "version": "0.0.70.49068d72",

@@ -1,11 +1,11 @@
-# PN Link Visualizer 0.8.0
+# PN Link Visualizer 0.8.1
 
 A Unity demo for receiving motion data through MocapApi, guiding device calibration,
 and recording/replaying the received skeletal results. This demo is independent from
 `../u3d_mocap`, which remains the minimal SDK example.
 
 **Status:** preview. Automated Windows checks have passed; live, worn-device calibration
-and motion quality still need device testing. The historical internal revision is r8.
+and motion quality still need device testing. Version 0.8.1 is the Windows-only update.
 
 ## Open and build
 
@@ -16,7 +16,7 @@ and motion quality still need device testing. The historical internal revision i
 
 The SDK dependency is **0.0.70.49068d72**. It is separate from the Visualizer product version.
 This demo targets Windows x64. The only enabled build scene is `Assets/Scenes/visualizer.unity`.
-The Windows project on `main` excludes the legacy Android SDK plugin and mobile scenes.
+Version 0.8.1 removes the legacy Android SDK plugin and mobile scenes.
 
 ## Use
 
@@ -46,7 +46,7 @@ contain raw IMU data. See [MOCAP-FORMAT.txt](MOCAP-FORMAT.txt).
 
 `version.json` is the source of truth for product version, build number, tag, Unity
 version, SDK fingerprint and recording compatibility. The release tag is
-**pnlink-visualizer-v0.8.0**. SDK and device/algorithm versions are independent.
+**pnlink-visualizer-v0.8.1**. SDK and device/algorithm versions are independent.
 
 After editing `version.json`, run:
 
@@ -83,8 +83,8 @@ fixtures and recordings are not distributed; the sample disables itself when abs
 
 ## 中文说明
 
-本工程是增强版 Unity Demo，保留原 `u3d_mocap` 示例。正式工具版本为 **0.8.0**，
-构建号 **1**，对应标签 `pnlink-visualizer-v0.8.0`；历史内部迭代号为 r8。
+本工程是增强版 Unity Demo。Windows 版为 **0.8.1**，构建号 **2**，
+对应标签 `pnlink-visualizer-v0.8.1`。
 
 使用 Unity **6000.0.31f1** 打开本目录，构建 `Assets/Scenes/visualizer.unity` 的
 Windows x64 运行包。SDK 版本单独固定为 **0.0.70.49068d72**，不要只替换 DLL 或绑定文件之一。

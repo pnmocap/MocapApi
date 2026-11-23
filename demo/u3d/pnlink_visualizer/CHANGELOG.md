@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.8.1 — 2026-11-23
 
 - Remove the legacy Android plugin, manifest, mobile scenes and location code from the
   Windows demo. Keep the pinned Windows SDK pair.

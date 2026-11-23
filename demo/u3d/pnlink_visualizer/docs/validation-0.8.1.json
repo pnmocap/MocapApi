@@ -1,0 +1,85 @@
+{
+  "product": "PN Link Visualizer",
+  "version": "0.8.1",
+  "build": 2,
+  "tag": "pnlink-visualizer-v0.8.1",
+  "stage": "preview",
+  "date": "2026-11-23",
+  "passed": true,
+  "unity_version": "6000.0.31f1",
+  "unity_runtime_bundle_version": "0.8.1",
+  "ui_version_verified": "0.8.1 (build 2)",
+  "sdk": {
+    "version": "0.0.70.49068d72",
+    "binding": "Assets/Scripts/MocapApi.cs",
+    "windows_x64": "Assets/Plugins/MocapApi.dll",
+    "binding_sha256": "6576d62f98da10ad9ba102f5a94c2e26edf2c7d5154623423d7bdd7eede510a4",
+    "windows_x64_sha256": "06d0599194c953fab0929bd51ce78db2bc0cf81798284e4b07c7663f6e14dffe"
+  },
+  "recording": {
+    "write": "NVPOSE2",
+    "read": [
+      "NVPOSE1",
+      "NVPOSE2"
+    ]
+  },
+  "production_scripts": 38,
+  "production_script_assembly_sha256": "a8f555006a0b46ee9a423ed83afb26df31a1723b10993a4010ffd5f36cb0d121",
+  "checks": {
+    "format_and_state": 42,
+    "offline_workflow_per_resolution": 43,
+    "resolutions": [
+      "1280x800",
+      "960x540"
+    ],
+    "production_startup_cases": 3
+  },
+  "startup_observation": "Retried with up to 20 seconds of log observation after the first cold start exceeded the seven-second sample.",
+  "device_commands_sent": 0,
+  "settings_restored": true,
+  "build_method": "script-only compilation against a matching Unity player; equal-width bundleVersion metadata update",
+  "player_sources_sha256": {
+    "Assets/Scripts/AbstractCommandProcess.cs": "630b245b6e82c883cc5b861a9b3e2b7d528d4d18e0e6d29f713829408619ccb5",
+    "Assets/Scripts/AbstractReporter.cs": "92e064095000a33afd22d042ebe9817197fb00d938f58bf521f004043245ed40",
+    "Assets/Scripts/AvatarController.cs": "3d2f89bb7638fcdd5e8a943c272dc9d425f2a67e7e3f063bf80e985e6c7b9962",
+    "Assets/Scripts/CalibrationGuidePanel.cs": "c4d779317ec57acf9f9423230fb8e22991bac9b9dd13f0f276aacaaba1385706",
+    "Assets/Scripts/CalibrationGuideState.cs": "0bd6ca324a6df4f382a1980dd6126217056e733ffaa7acd1ce819374d16776f7",
+    "Assets/Scripts/CalibrationProcess.cs": "3c7d79dbb31ab44e3f9ef319570e0d60cfa1bdfc987378e7950b8678944771a5",
+    "Assets/Scripts/CameraController.cs": "af00bce534580596628ed1ce00b4e2bfc3b4c45ef1c5d6d1b3d5d66243a91a61",
+    "Assets/Scripts/ControlToolbar.cs": "2e1032689f5569958fc850d7f4c965deaa63850adb03dbbf7a47ca4973718120",
+    "Assets/Scripts/CurveUI.cs": "8d3fcae3c56dddff153cdc1150f7057ad77dc2035b448835ff02a70a88e4ba31",
+    "Assets/Scripts/DeviceMonitor.cs": "b29bb5f99ff6256d934dc8ea023cc3b3c9f7c63e21b1edebddf76d0aac44006a",
+    "Assets/Scripts/DevicePanel.cs": "84e16cb1453b342b9ad1185ccc340052e0039d58db372c96e1c86d863903fc45",
+    "Assets/Scripts/DeviceSnapshot.cs": "5a974432e567833c44cf2724e45dc15d0f647fb1950870e43955b1a8f3f7c99b",
+    "Assets/Scripts/DeviceStatusView.cs": "3682783e16446a2563540e3894aaa225208bd3078dfefaadc4c1db2ca95051ef",
+    "Assets/Scripts/DrawLinesOnPanelWithLineRenderer.cs": "0034ae04c2253d16e7669b9d6523e7797f2e7240fe249a52f673496529c12bc6",
+    "Assets/Scripts/DynamicLineDrawer.cs": "5d7d1641e899f76bc81556c4b9cda69fd9208582ad17cd0f7d2b8cd373abeea0",
+    "Assets/Scripts/GPSDataLoader.cs": "6543f65a5e3ba1ba265960acfd530b4bb61a71557780b193e275d0d4a0cf16b5",
+    "Assets/Scripts/GPSTracker.cs": "15e82792b240ebba9f478c71c11cb23a336f1d80cb1863b1bc8305383509763e",
+    "Assets/Scripts/InformationPanel.cs": "2558a5faa65ec10f522463584cf62d2e2cd6d42ffc929dc52db4216edd0ded23",
+    "Assets/Scripts/MainPanel.cs": "d36ba0d0604a6558a45b3b6c3d0424502523fd8ad239d140624cb49a3b890c41",
+    "Assets/Scripts/MasterItemGUI.cs": "38e6c568d98d5f939c54ce29c36ab20bf041b2a8f764fa210676e95078325013",
+    "Assets/Scripts/MocapApi.cs": "6576d62f98da10ad9ba102f5a94c2e26edf2c7d5154623423d7bdd7eede510a4",
+    "Assets/Scripts/MocapApiVersion.cs": "4748b2d1215b83bb106487578f8ba96e36d2ad210a13b9931d5eddef387fe9b7",
+    "Assets/Scripts/MocapApplication.cs": "263a63b06ebaf13e912996bf45db889dfcf043e8665a97e326a2b15e615064c0",
+    "Assets/Scripts/MocapConnectionSettings.cs": "32968f0c76d9d2b1b1d7d7bfda0e1431a300195c6373d94b5a0d4bc2d0903d2f",
+    "Assets/Scripts/MotionRecording.cs": "0549e731331697c8ca1435da6f3c2239dab7ffb9daf601f9239b2b11bb821e32",
+    "Assets/Scripts/MotionSession.cs": "1c19f2c73dee12f45996ae96dc1781f6c6cebd98b12bec67a903a088ec64aa53",
+    "Assets/Scripts/NormalCommandProcess.cs": "b378253c92682d423d697b28cddb1d4d91cb437e23ce65d877753cb58afc9bad",
+    "Assets/Scripts/OutputPanel.cs": "70d6cd3f046d65cfadc347a8738da9ab15e8958a599e1dc2020e2c693a220e00",
+    "Assets/Scripts/PopupPanelBehaviour.cs": "76aa30f50c2cf301ab0b98ce2cb729edcf2dee7f2ae8d8d20cbf34847dc4450e",
+    "Assets/Scripts/RotationOrderSelector.cs": "10ad45b8ccb44e41f919789f32852bfd06d4d8ffbb9b27f70de8c6224c14ca7c",
+    "Assets/Scripts/SensorItemGUI.cs": "24fe633eda19b4fee3d41605981ad191a278e2aadcd6d69a087db365ec42e04b",
+    "Assets/Scripts/Settings.cs": "71a8e5183bbe379418c909f1e29b3c97ccf93d38237b4a271a0a2e7373388b4b",
+    "Assets/Scripts/StatusColor.cs": "c2fde5e35004d2724d72895a56cc061f75e0a1fe7e140c963db9c9e9a4c2bd3e",
+    "Assets/Scripts/StatusPanel.cs": "859df7c5df4fc630ba5cc64c82ca44930e8bf97f018a2fc135cbc4c146b3945c",
+    "Assets/Scripts/VisualizerBuildInfo.cs": "7fe68bf42fdc6874a54182cf9fe087624cec428dc150af99ace011402564bd0c",
+    "Assets/Scripts/VisualizerLanguage.cs": "71ecd9b88a94ca63005d3c9f9ef12f126ffe822145c9e854b6c407badce4a8a1",
+    "Assets/Scripts/VisualizerUI.cs": "90c05959920f4ebb04f0b6ac4aa648e37e86f746bb3cb30d7f942eb37e46905e",
+    "Assets/Scripts/VisualizerWorkspace.cs": "293e5f57a8d4df704f761d1bcbd89cbabe286f85858dd0680407d0bc4f039a45"
+  },
+  "limitations": [
+    "Validation uses an existing Unity Windows player with recompiled scripts.",
+    "Full Unity Editor rebuild and live device testing were not performed."
+  ]
+}

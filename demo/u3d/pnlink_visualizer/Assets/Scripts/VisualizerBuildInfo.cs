@@ -2,8 +2,8 @@
 public static class VisualizerBuildInfo
 {
     public const string Product = "PN Link Visualizer";
-    public const string Version = "0.8.0";
-    public const string Tag = "pnlink-visualizer-v0.8.0";
+    public const string Version = "0.8.1";
+    public const string Tag = "pnlink-visualizer-v0.8.1";
     public const string Stage = "preview";
-    public const int Build = 1;
+    public const int Build = 2;
 }

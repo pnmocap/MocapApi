@@ -1,4 +1,4 @@
-PN Link Visualizer 0.8.0 motion recording format
+PN Link Visualizer motion recording format
 
 Extension: .mocap; interrupted streaming recordings can remain .mocap.partial.
 All numeric fields are little-endian. Strings use an int32 byte length and UTF-8 bytes.
@@ -44,4 +44,4 @@ Recovery and validation:
   Incomplete trailing frame data is ignored; malformed complete data is rejected.
   Bone paths, finite values, quaternion norms, monotonic times, snapshot lengths and
   sensor counts are checked before loading. No native handles are serialized.
-  0.8.0 reads both versions; the historical internal r7 only reads NVPOSE1.
+  PN Link Visualizer 0.8.0 and 0.8.1 read both formats. Internal r7 reads NVPOSE1.
