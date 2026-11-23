@@ -89,5 +89,3 @@ __pycache__/
 !Assets/Scripts/MocapApiVersion.cs.meta
 !Assets/Plugins/MocapApi.dll
 !Assets/Plugins/MocapApi.dll.meta
-!Assets/Plugins/android/libMocapApi.so
-!Assets/Plugins/android/libMocapApi.so.meta

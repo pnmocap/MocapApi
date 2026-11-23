@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Remove the legacy Android plugin, manifest, mobile scenes and location code from the
+  Windows demo. Keep the pinned Windows SDK pair.
+
 ## 0.8.0 — 2026-11-23
 
 First versioned publication of the PN Link Visualizer Unity demo, based on the validated

@@ -12,4 +12,4 @@ one side independently. Validate a dependency update before changing the pinned 
 
 The repository's existing `install.bat` still serves the original SDK demos and is not
 changed by this addition. This demo already includes its paired Windows dependency.
-Historical Android assets are retained without claiming Android player validation.
+The Visualizer demo uses the pinned Windows SDK pair.

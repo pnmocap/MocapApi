@@ -76,11 +76,6 @@ public class MainPanel : MonoBehaviour, AbstractReporter
     public void startCaptureWithPtp() { PrepareAction("开始采集（PTP）", "请走到测试位置。", startCaptureWithPtpNow); }
     void startCaptureWithPtpNow()
     {
-        var gpsController = GetComponent<GPSController>();
-        if (null != gpsController)
-        {
-            gpsController.StartUpdateGPS();
-        }
         ulong pendingCommand = 0;
         IMCPCommand.Command.CreateCommand((uint)EMCPCommand.CommandStartCapture, ref pendingCommand);
         IMCPCommand.Command.SetCommandExtraLong((uint)EMCPCommandExtraLong.CommandExtraLong_Extra1, new IntPtr((uint)EStartCaptureFlag.StartCaptureFlag_EnablePtp), pendingCommand);
@@ -89,11 +84,6 @@ public class MainPanel : MonoBehaviour, AbstractReporter
     public void startCapture() { PrepareAction("开始采集", "请走到测试位置，倒计时结束后开始采集。", startCaptureNow); }
     void startCaptureNow()
     {
-        var gpsController = GetComponent<GPSController>();
-        if (null != gpsController)
-        {
-            gpsController.StartUpdateGPS();
-        }
         ulong pendingCommand = 0;
         IMCPCommand.Command.CreateCommand((uint)EMCPCommand.CommandStartCapture, ref pendingCommand);
         if (PlayerPrefs.GetInt("StartCapture.EnablePTP", 0) != 0) {
@@ -105,11 +95,6 @@ public class MainPanel : MonoBehaviour, AbstractReporter
     {
         if (GetComponent<MotionSession>().PlaybackVisible) { ReportWarning("回放中不会发送设备命令。"); return; }
         CancelPreparation();
-        var gpsController = GetComponent<GPSController>();
-        if (null != gpsController)
-        {
-            gpsController.StopUpdateGPS();
-        }
         ulong pendingCommand = 0;
         IMCPCommand.Command.CreateCommand((uint)EMCPCommand.CommandStopCapture, ref pendingCommand);
         GetComponent<MocapApplication>().queueCommand(pendingCommand, new NormalCommandProcess(pendingCommand, "Stop Capture", this));

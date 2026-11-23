@@ -1,7 +1,6 @@
 # Preserve exact source and SDK fingerprints across Windows/Linux checkouts.
 * -text
 *.dll binary
-*.so binary
 *.fbx binary
 *.ttf binary
 *.png binary

@@ -15,8 +15,8 @@ and motion quality still need device testing. The historical internal revision i
 4. Keep the bundled MocapApi DLL and C# binding together; see [SDK-DEPENDENCIES.md](SDK-DEPENDENCIES.md).
 
 The SDK dependency is **0.0.70.49068d72**. It is separate from the Visualizer product version.
-Android legacy assets are retained, but Android/Linux player builds are not validated
-by this release. The main build scene is the Windows visualizer scene.
+This demo targets Windows x64. The only enabled build scene is `Assets/Scenes/visualizer.unity`.
+The Windows project on `main` excludes the legacy Android SDK plugin and mobile scenes.
 
 ## Use
 
